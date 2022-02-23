@@ -476,6 +476,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   margin-left: auto;
   margin-right: auto;
 }
+.my-2 {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
 .mx-2 {
   margin-left: 0.5rem;
   margin-right: 0.5rem;
@@ -501,14 +505,17 @@ Ensure the default browser behavior of the `hidden` attribute.
 .mt-2 {
   margin-top: 0.5rem;
 }
+.mt-10 {
+  margin-top: 2.5rem;
+}
+.ml-4 {
+  margin-left: 1rem;
+}
 .ml-1 {
   margin-left: 0.25rem;
 }
 .ml-2 {
   margin-left: 0.5rem;
-}
-.ml-4 {
-  margin-left: 1rem;
 }
 .mt-8 {
   margin-top: 2rem;
@@ -519,18 +526,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 .-mt-px {
   margin-top: -1px;
 }
-.mr-4 {
-  margin-right: 1rem;
-}
-.mt-1 {
-  margin-top: 0.25rem;
-}
-.mt-10 {
-  margin-top: 2.5rem;
-}
-.ml-24 {
-  margin-left: 6rem;
-}
 .flex {
   display: flex;
 }
@@ -539,6 +534,9 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 .hidden {
   display: none;
+}
+.h-auto {
+  height: auto;
 }
 .h-14 {
   height: 3.5rem;
@@ -552,8 +550,11 @@ Ensure the default browser behavior of the `hidden` attribute.
 .h-10 {
   height: 2.5rem;
 }
-.h-48 {
-  height: 12rem;
+.h-64 {
+  height: 16rem;
+}
+.h-24 {
+  height: 6rem;
 }
 .h-5 {
   height: 1.25rem;
@@ -567,14 +568,14 @@ Ensure the default browser behavior of the `hidden` attribute.
 .min-h-screen {
   min-height: 100vh;
 }
+.w-10\/12 {
+  width: 83.333333%;
+}
 .w-14 {
   width: 3.5rem;
 }
 .w-48 {
   width: 12rem;
-}
-.w-10\/12 {
-  width: 83.333333%;
 }
 .w-4\/12 {
   width: 33.333333%;
@@ -582,28 +583,14 @@ Ensure the default browser behavior of the `hidden` attribute.
 .w-full {
   width: 100%;
 }
+.w-auto {
+  width: auto;
+}
 .w-5 {
   width: 1.25rem;
 }
 .w-8 {
   width: 2rem;
-}
-.w-auto {
-  width: auto;
-}
-.w-max {
-  width: -webkit-max-content;
-  width: -moz-max-content;
-  width: max-content;
-}
-.w-6\/12 {
-  width: 50%;
-}
-.w-8\/12 {
-  width: 66.666667%;
-}
-.w-9\/12 {
-  width: 75%;
 }
 .max-w-6xl {
   max-width: 72rem;
@@ -617,14 +604,17 @@ Ensure the default browser behavior of the `hidden` attribute.
 .flex-col {
   flex-direction: column;
 }
+.flex-wrap {
+  flex-wrap: wrap;
+}
 .place-content-center {
   place-content: center;
 }
-.place-content-between {
-  place-content: space-between;
-}
 .place-content-around {
   place-content: space-around;
+}
+.content-center {
+  align-content: center;
 }
 .items-center {
   align-items: center;
@@ -637,9 +627,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 .self-center {
   align-self: center;
-}
-.self-stretch {
-  align-self: stretch;
 }
 .overflow-hidden {
   overflow: hidden;
@@ -693,10 +680,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 .bg-yellow-500 {
   --tw-bg-opacity: 1;
   background-color: rgb(234 179 8 / var(--tw-bg-opacity));
-}
-.bg-red-500 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(239 68 68 / var(--tw-bg-opacity));
 }
 .bg-gray-100 {
   --tw-bg-opacity: 1;
@@ -754,13 +737,17 @@ Ensure the default browser behavior of the `hidden` attribute.
   font-size: 1.125rem;
   line-height: 1.75rem;
 }
-.text-sm {
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-}
 .text-4xl {
   font-size: 2.25rem;
   line-height: 2.5rem;
+}
+.text-base {
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+.text-sm {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
 }
 .font-bold {
   font-weight: 700;
@@ -829,6 +816,10 @@ Ensure the default browser behavior of the `hidden` attribute.
 .underline {
   -webkit-text-decoration-line: underline;
           text-decoration-line: underline;
+}
+.line-through {
+  -webkit-text-decoration-line: line-through;
+          text-decoration-line: line-through;
 }
 .antialiased {
   -webkit-font-smoothing: antialiased;

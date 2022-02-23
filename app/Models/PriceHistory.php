@@ -9,6 +9,10 @@ class PriceHistory extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'product_sku';
-    public $incrementing = false;
+    // protected $primaryKey = 'product_sku';
+    // public $incrementing = false;
+
+    protected $fillable = [
+        'product_sku', 'start_date', 'regular_price', 'sale_price'
+    ];
 }

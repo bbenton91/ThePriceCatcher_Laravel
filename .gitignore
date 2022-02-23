@@ -14,3 +14,4 @@ yarn-error.log
 /.idea
 /.vscode
 transition_database.py
+127_0_0_1.sql

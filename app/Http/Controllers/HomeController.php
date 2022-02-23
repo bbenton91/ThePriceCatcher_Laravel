@@ -35,13 +35,13 @@ class HomeController extends Controller
             $skus = array_map(fn($o) => $o->sku, $most_recently_viewed);
 
             // Secondly, we get the some randomly picked recently added products from our database
-            $recently_added = HomeController::getRecentlyAdded(5);
+            $recently_added = $this->getRecentlyAdded(5);
 
             // Add our previous existing skus to the new skus from recently_added
             // $skus = array_merge($skus, array_map(function($o){return $o->sku;}, $recently_added));
 
             // Get 5 randomly recently changed items
-            $recently_changed = HomeController::getRecentlyChanged(5);
+            $recently_changed = $this->getRecentlyChanged(5);
 
             // $qo = new QueryObject(new MostViewedModel(), IndexController::$pdo);
 
@@ -100,6 +100,8 @@ class HomeController extends Controller
         //     'search_query'=>"",
         //     'prepend'=>Environment::PrependUrl()
         // ]);
+
+        // file_get_contents("https://api.bestbuy.com/v1/products(sku%20in%20(5489800))?show=sku,name,regularPrice,salePrice,class,classId,subclass,subclassId,department,departmentId,categoryPath,itemUpdateDate,longDescription,largeImage,url,startDate,new,addToCartUrl&pageSize=100&format=json&apiKey=kopWJoIdBo27npGCLTOP3BlX");
 
         return view('home', [
             'products' => [],

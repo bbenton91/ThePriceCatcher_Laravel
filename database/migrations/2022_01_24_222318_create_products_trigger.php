@@ -14,6 +14,56 @@ class CreateProductsTrigger extends Migration
      */
     public function up()
     {
+
+        $sql = "
+            CREATE PROCEDURE `clear_from_products` (IN old_sku int)
+            BEGIN
+                DECLARE
+                    recently_added_count INT ; DECLARE recently_changed_count INT ;
+                SELECT
+                    COUNT(*)
+                INTO recently_added_count
+            FROM
+                recently_added
+            WHERE
+                product_sku = old_sku ;
+            SELECT
+                COUNT(*)
+            INTO recently_changed_count
+            FROM
+                recently_changed
+            WHERE
+                product_sku = old_sku ;
+                IF recently_added_count <= 0 && recently_changed_count <= 0 THEN
+                    DELETE
+                    FROM
+                        products
+                    WHERE
+                        product_sku = old_sku ;
+                END IF ;
+
+            END;";
+
+            $trigger = "
+                CREATE TRIGGER clear_from_products_on_recently_added_trigger
+                AFTER DELETE ON recently_added
+                FOR EACH ROW
+                BEGIN
+                    CALL clear_from_products(old.product_sku);
+                END;
+
+                CREATE TRIGGER clear_from_products_on_recently_changed_trigger
+                AFTER DELETE ON recently_changed
+                FOR EACH ROW
+                BEGIN
+                    CALL clear_from_products(old.product_sku);
+                END;
+            ";
+
+            DB::unprepared('DROP PROCEDURE IF EXISTS `clear_from_products`;');
+            DB::unprepared($sql);
+            DB::unprepared($trigger);
+
         /**
          * This trigger is so that we can have a table stup as follows
          *
@@ -28,31 +78,31 @@ class CreateProductsTrigger extends Migration
          * This will keep the products table clean and up to date with the other two tables.
          *
          */
-        DB::unprepared('
-            CREATE OR REPLACE FUNCTION clear_from_products()
-            RETURNS trigger AS $$
-            DECLARE
-                has_row boolean;
-                ra_row recently_added%rowtype;
-                rc_row recently_changed%rowtype;
-            BEGIN
-                IF (SELECT count(*) FROM recently_added WHERE product_sku=old.product_sku) <= 0 AND (SELECT count(*) FROM recently_changed WHERE product_sku=old.product_sku) <= 0 THEN
-                    DELETE FROM products WHERE product_sku=old.product_sku;
-                END IF;
-                RETURN NULL;
-            END
-            $$ LANGUAGE plpgsql;
+        // DB::unprepared('
+        //     CREATE OR REPLACE FUNCTION clear_from_products()
+        //     RETURNS trigger AS $$
+        //     DECLARE
+        //         has_row boolean;
+        //         ra_row recently_added%rowtype;
+        //         rc_row recently_changed%rowtype;
+        //     BEGIN
+        //         IF (SELECT count(*) FROM recently_added WHERE product_sku=old.product_sku) <= 0 AND (SELECT count(*) FROM recently_changed WHERE product_sku=old.product_sku) <= 0 THEN
+        //             DELETE FROM products WHERE product_sku=old.product_sku;
+        //         END IF;
+        //         RETURN NULL;
+        //     END
+        //     $$ LANGUAGE plpgsql;
 
-            CREATE TRIGGER clear_from_products_on_recently_added_trigger
-            AFTER DELETE ON recently_added
-            FOR EACH ROW
-            EXECUTE PROCEDURE clear_from_products();
+        //     CREATE TRIGGER clear_from_products_on_recently_added_trigger
+        //     AFTER DELETE ON recently_added
+        //     FOR EACH ROW
+        //     EXECUTE PROCEDURE clear_from_products();
 
-            CREATE TRIGGER clear_from_products_on_recently_changed_trigger
-            AFTER DELETE ON recently_changed
-            FOR EACH ROW
-            EXECUTE PROCEDURE clear_from_products();
-        ');
+        //     CREATE TRIGGER clear_from_products_on_recently_changed_trigger
+        //     AFTER DELETE ON recently_changed
+        //     FOR EACH ROW
+        //     EXECUTE PROCEDURE clear_from_products();
+        // ');
 
     // DB::unprepared('
     // DELIMITER $$
@@ -109,7 +159,7 @@ class CreateProductsTrigger extends Migration
      */
     public function down()
     {
-        DB::unprepared('DROP TRIGGER IF EXISTS clear_from_products_on_recently_added_trigger ON recently_added');
-        DB::unprepared('DROP TRIGGER IF EXISTS clear_from_products_on_recently_changed_trigger ON recently_changed');
+        DB::unprepared('DROP TRIGGER IF EXISTS clear_from_products_on_recently_added_trigger');
+        DB::unprepared('DROP TRIGGER IF EXISTS clear_from_products_on_recently_changed_trigger');
     }
 }

@@ -8,14 +8,17 @@
     {{-- <link href="{{ asset('css/styles.css') }}" rel="stylesheet"> --}}
     {{-- <link rel="stylesheet" href="{{ asset('css/app.css') }}"> --}}
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/styles.css') }}" rel="stylesheet">
     <!-- <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script> -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700,700i,800&display=swap" rel="stylesheet">
+
+    {{-- <link rel="stylesheet" href="/css/app.css"> --}}
   </head>
 
   <body>
     <!-- Require our search bar here -->
-    @include('header', ['prepend' => $prepend]);
-    @include('search_bar', ['prepend' => $prepend, "search_query" => ""]);
+    @include('header', ['prepend' => $prepend])
+    @include('search_bar', ['prepend' => $prepend, "search_query" => ""])
 
     <div id="main_page_div" class="w-10/12 m-auto mt-4">
 
@@ -39,9 +42,8 @@
       {{-- {% import "listings.html" as listings %} --}}
 
       @if (count($recentlyAdded) > 0)
-
         <section id="recentlyViewedSection" class="w-10/12 mx-auto">
-            <h2 class = "text-4xl mt-10 ml-4 mb-2">Recently Viewed Items</h2>
+            <h2 class = "text-4xl mt-10 ml-4 mb-2">Recently Added Items</h2>
             <div id="recently_changed_list" class="preview_item_list flex place-content-around">
                 @foreach ($recentlyAdded as $item)
                     <span >
