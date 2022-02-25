@@ -16,73 +16,32 @@ use paha\SimpleBestBuy\ProductOptions;
 class BrowseController extends Controller
 {
     public function showTopSales($depID){
-        // $recents = TopSale::select('*')
-        // ->join("price_histories AS histories1", function($join){
-        //     $join->select(DB::raw('histories1.product_sku, MAX(histories1.regular_price) as highest_price'))
-        //         ->on('top_sales.product_sku', '=', 'histories1.product_sku')
-        //         ->groupBy('histories1.product_sku')
-        //         ->join('price_histories AS histories2', function($join){
-        //             $join->select(DB::raw('histories2.product_sku, MIN(histories2.sale_price) as lowest_price'))
-        //             ->on('histories1.product_sku', '=', 'histories2.product_sku')
-        //             ->groupBy('histories2.product_sku');
-        //         });
-        // })->limit(100)
-        // ->where('top_sales.product_sku', '>', '0')
-        // ->get();
-
-        // $recents = DB::table('top_sales AS ts')
-        // ->select(DB::raw('ts.*, histories1.regular_price, histories2.sale_price'))
-        // ->join("price_histories AS histories1", function($join){
-        //     $join->select(DB::raw('MAX(histories1.regular_price)'))
-        //         ->on('ts.product_sku', '=', 'histories1.product_sku');
-        //         // ->groupBy('histories1.product_sku');
-
-        // })->join('price_histories AS histories2', function($join){
-        //     $join->select(DB::raw('MIN(histories2.sale_price)'))
-        //     ->on('histories1.product_sku', '=', 'histories2.product_sku');
-        //     // ->groupBy('histories2.product_sku');
-        // })
-        // ->limit(2)
-        // ->where('ts.product_sku', '>', '0')
-        // ->get();
 
         // I'm not sure how to express this in eloquent ORM
-        $recents = DB::select(DB::raw
-        ('SELECT *, lowest_price, highest_price
-            FROM (
-                SELECT product_sku, MAX(regular_price) as highest_price, MIN(sale_price) as lowest_price
-                FROM price_histories
-                GROUP BY product_sku
-                ) as ph
-            JOIN top_sales as ts
-            ON ts.product_sku = ph.product_sku
-            GROUP BY ts.product_sku
-            LIMIT 100;
-        '));
+        // $recents = DB::select(DB::raw
+        // ('SELECT *, lowest_price, highest_price
+        //     FROM (
+        //         SELECT product_sku, MAX(regular_price) as highest_price, MIN(sale_price) as lowest_price
+        //         FROM price_histories
+        //         GROUP BY product_sku
+        //         ) as ph
+        //     JOIN top_sales as ts
+        //     ON ts.product_sku = ph.product_sku
+        //     GROUP BY ts.product_sku
+        //     LIMIT 100;
+        // '));
 
-        // $recents = DB::table('top_sales AS ts')
-        //     ->select(DB::raw('ts.*, MAX(histories.regular_price) AS highest_price'))
-        //     ->join("price_histories AS histories", function($join){
-        //         $join->on('histories.product_sku', '=', 'ts.product_sku')
-        //             ->groupBy('histories.regular_price');
-        //     })
-        //     ->limit(2)
-        //     ->where('ts.product_sku', '>', '0')
-        //     ->groupBy('histories.regular_price')
-        //     ->get();
-
-        // $recents = TopSale::limit(100)
-        // ->where('product_sku', '>', '0')
-        // ->get();
-
-        // error_log(print_r($recents));
-        // die();
-
+        $recents = DB::query()->fromSub(function($query){
+            $query->selectRaw('product_sku, MAX(regular_price) as highest_price, MIN(sale_price) as lowest_price')
+                ->from('price_histories')
+                ->groupBy('product_sku');
+        }, 'ph')
+            ->join('top_sales AS ts', 'ts.product_sku', '=', 'ph.product_sku')
+            ->groupBy('ts.product_sku')
+            ->limit(100)
+            ->get();
 
         $finalProducs = $this->getApiData(collect($recents));
-
-        // error_log(print_r($finalProducs));
-        // die();
 
         return view('browse', [
             'products' => $finalProducs,
@@ -91,13 +50,32 @@ class BrowseController extends Controller
     }
 
     public function showRecentlyChanged($depID){
-        $recents = RecentlyChanged::orderBy('recently_changed.created_at')
+        // I'm not sure how to express this in eloquent ORM
+        // $recents = DB::select(DB::raw
+        // ('SELECT *, lowest_price, highest_price
+        //     FROM (
+        //         SELECT product_sku, MAX(regular_price) as highest_price, MIN(sale_price) as lowest_price
+        //         FROM price_histories
+        //         GROUP BY product_sku
+        //         ) as ph
+        //     JOIN recently_changed as rc
+        //     ON rc.product_sku = ph.product_sku
+        //     GROUP BY rc.product_sku
+        //     LIMIT 100;
+        // '));
+
+        $recents = DB::query()->fromSub(function($query){
+            $query->selectRaw('product_sku, MAX(regular_price) as highest_price, MIN(sale_price) as lowest_price')
+                ->from('price_histories')
+                ->groupBy('product_sku');
+        }, 'ph')
+            ->join('recently_changed AS rc', 'rc.product_sku', '=', 'ph.product_sku')
+            ->groupBy('rc.product_sku')
             ->limit(100)
-            // ->join('price_histories', 'recently_changed.product_sku', '=', 'price_histories.product_sku')
             ->get();
 
 
-        $finalProducs = $this->getApiData($recents);
+        $finalProducs = $this->getApiData(collect($recents));
 
         // error_log(print_r($orderedProducts));
         // die();
@@ -109,12 +87,36 @@ class BrowseController extends Controller
     }
 
     public function showRecentlyAdded($orderedProducts){
-        $recents = RecentlyAdded::orderBy('recently_added.created_at')
-        ->limit(100)
-        ->get();
+        // I'm not sure how to express this in eloquent ORM
+        // $recents = DB::select(DB::raw
+        // ('SELECT *, lowest_price, highest_price
+        //     FROM (
+        //         SELECT product_sku, MAX(regular_price) as highest_price, MIN(sale_price) as lowest_price
+        //         FROM price_histories
+        //         GROUP BY product_sku
+        //         ) as ph
+        //     JOIN recently_added as ra
+        //     ON ra.product_sku = ph.product_sku
+        //     GROUP BY ra.product_sku
+        //     LIMIT 100;
+        // '));
+
+        $recents = DB::query()->fromSub(function($query){
+            $query->selectRaw('product_sku, MAX(regular_price) as highest_price, MIN(sale_price) as lowest_price')
+                ->from('price_histories')
+                ->groupBy('product_sku');
+        }, 'ph')
+            ->join('recently_added AS ra', 'ra.product_sku', '=', 'ph.product_sku')
+            // ->on('ra.product_sku', '=', 'ph.product_sku')
+            ->groupBy('ra.product_sku')
+            ->limit(100)
+            ->get();
+
+        // error_log(print_r($recents));
+        // die();
 
 
-        $finalProducs = $this->getApiData($recents);
+        $finalProducs = $this->getApiData(collect($recents));
 
         // error_log(print_r($orderedProducts));
         // die();
