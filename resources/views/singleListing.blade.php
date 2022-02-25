@@ -31,19 +31,19 @@
     }
 @endphp
 
-<div class="w-48 h-64 flex flex-col drop-shadow border rounded">
+<div class="w-48 h-80 flex flex-col drop-shadow border rounded">
     <div class="listing w-auto mb-2">
         <img src={{$item->image_url}} alt="" class="mx-auto my-2 h-full">
     </div>
     <div class="flex flex-col mx-2 h-full">
-        <span class="text-center w-full grow">{{$name}}</span>
+        <span class="text-center w-full grow font-semibold">{{$name}}</span>
 
         <div class="flex">
             <div class="flex flex-col place-content-around w-full items-center">
-
+               <span class="font-medium underline">Price:</span>
                 @if ($rp != $sp)
-                    <span class="line-through">${{$rp}}</span>
-                    <span>${{$sp}}</span>
+                    <span class="italic line-through">${{$rp}}</span>
+                    <span class="">${{$sp}}</span>
                 @else
                     <span>${{$rp}}</span>
                 @endif
@@ -51,8 +51,9 @@
 
             </div>
             <div class="flex flex-col w-full items-center">
-                <span>${{$hp}}</span>
-                <span>${{$lp}}</span>
+                <span class="text-medium underline">History:</span>
+                <span class="text-red-600">${{$hp}}</span>
+                <span class="text-green-600">${{$lp}}</span>
             </div>
         </div>
 
