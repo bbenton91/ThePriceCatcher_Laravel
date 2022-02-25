@@ -15,3 +15,4 @@ yarn-error.log
 /.vscode
 transition_database.py
 127_0_0_1.sql
+transition_database_mysql.py
