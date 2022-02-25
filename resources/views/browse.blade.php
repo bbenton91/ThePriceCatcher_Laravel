@@ -35,7 +35,7 @@
             <section id="productListings" class="w-10/12 mx-auto h-auto">
                 <div id="recently_changed_list" class="preview_item_list flex flex-wrap place-content-around">
                     @foreach ($products as $item)
-                        <span class="mt-5">
+                        <span class="mt-10">
                             @include('singleListing', ['item' => $item])
                         </span>
                     @endforeach
