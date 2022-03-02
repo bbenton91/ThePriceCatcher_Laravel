@@ -26,41 +26,49 @@
     $sp = number_format($item->sale_price/100, 2);
     $was = ($item->sale_price != $item->regular_price ? $item->sale_price/100.0 : 0);
     $name = $item->product_name;
-    if (strlen($name) > 30){
-        $name = Str::substr($name, 0, 30)."...";
+    $length = 60;
+    if (strlen($name) > $length){
+        $name = Str::substr($name, 0, $length)."...";
     }
 @endphp
 
-<div class="w-48 h-80 flex flex-col drop-shadow border rounded">
-    <div class="listing w-auto mb-2">
-        <img src={{$item->image_url}} alt="" class="mx-auto my-2 h-full">
+<div class="w-30r h-48 flex flex-col drop-shadow-lg border rounded bg-gray-50">
+    <div class="listing w-auto mb-2 flex">
+        <img src={{$item->image_url}} alt="" class="ml-2 mt-2 max-w-70">
+        <div class="flex flex-col place-content-around w-full items-end mr-2">
+             @if ($rp != $sp)
+                 <span class="italic line-through">${{$rp}}</span>
+                 <span class="">${{$sp}}</span>
+             @else
+                 <span>${{$rp}}</span>
+             @endif
+             <br>
+
+         </div>
     </div>
+
     <div class="flex flex-col mx-2 h-full">
-        <span class="text-center w-full grow font-semibold">{{$name}}</span>
-
-        <div class="flex">
-            <div class="flex flex-col place-content-around w-full items-center">
-               <span class="font-medium underline">Price:</span>
-                @if ($rp != $sp)
-                    <span class="italic line-through">${{$rp}}</span>
-                    <span class="">${{$sp}}</span>
-                @else
-                    <span>${{$rp}}</span>
-                @endif
-                <br>
-
-            </div>
-            <div class="flex flex-col w-full items-center">
-                <span class="text-medium underline">History:</span>
-                <span class="text-red-600">${{$hp}}</span>
-                <span class="text-green-600">${{$lp}}</span>
-            </div>
-        </div>
-
+        {{-- <a href={{$item->product_url}}> --}}
+            <span class="text-center w-full grow font-semibold ">{{$name}}</span>
+        {{-- </a> --}}
     </div>
+
+    <span class="border mb-2 mx-2"></span>
+
     <div class="flex w-full h-24">
-        <a href={{$item->product_url}} class="w-full">
-            <button class="w-full bestbuy-button h-full font-semibold text-base">View Item</button>
+        <a href={{$item->product_url}} class="w-full mx-2">
+            {{-- <button class="w-full bestbuy-button h-full font-semibold text-base">View Product</button> --}}
+            <span class="text-blue-600">View Product</span>
         </a>
+
+        <a href={{$item->product_url}} class="w-full mx-2">
+            {{-- <button class="w-full bestbuy-button h-full font-semibold text-base">View Product</button> --}}
+            <span class="text-blue-600">View History</span>
+        </a>
+
+        <div class="flex w-full place-items-end place-content-end">
+            <span class="text-red-800 font-bold mr-2 bg-red-300 p-0.5 rounded">${{$hp}}</span>
+            <span class="text-green-800 font-bold mr-1 bg-green-300 p-0.5 rounded">${{$lp}}</span>
+        </div>
     </div>
 </div>
