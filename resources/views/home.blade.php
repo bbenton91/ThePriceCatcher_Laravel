@@ -16,8 +16,10 @@
   </head>
 
   <body>
+
     <!-- Require our search bar here -->
     @include('header', ['prepend' => $prepend])
+    <div class="mt-10"></div>
     @include('search_bar', ['prepend' => $prepend, "search_query" => ""])
 
     <div id="main_page_div" class="w-10/12 m-auto mt-4">
@@ -44,9 +46,9 @@
       @if (count($recentlyAdded) > 0)
         <section id="recentlyViewedSection" class="w-10/12 mx-auto">
             <h2 class = "text-4xl mt-10 ml-4 mb-2">Recently Added Items</h2>
-            <div id="recently_changed_list" class="preview_item_list flex place-content-around">
+            <div id="recently_changed_list" class="preview_item_list flex mx-auto place-content-around">
                 @foreach ($recentlyAdded as $item)
-                    <span >
+                    <span class="ml-4">
                         @include('singleListing', ['item' => $item])
                     </span>
                 @endforeach
@@ -116,5 +118,7 @@
     </div>
 
     {{-- @include('footer') --}}
+    @include('footer')
+
   </body>
 </html>
