@@ -7,16 +7,29 @@
     <link href="{{ asset('css/styles.css') }}" rel="stylesheet">
   </head>
   <body>
-    <div id="innerBody">
+    <div id="innerBody" class="browse-color">
       <!-- Require our search bar here -->
         @include('header', ['prepend' => $prepend])
+        <div class="mt-8"></div>
+
         @include('search_bar', ['prepend' => $prepend, "search_query" => ""])
 
-        <div class="is-flex is-justify-content-center">
+        <div class="flex place-content-center mt-4">
           <form id="departmentForm" class="margin-top-20" action="department">
-              <label class="margin-right-10" for="department">Department: </label>
+              <label class="mr-4 font-semibold text-white" for="department">Department: </label>
               <select id = "department_list" name="department" onchange="this.form.submit()">
               <option value=-1>Any</option>
+
+                @foreach ($departments as $dep)
+                    @php
+                        $name = strtolower($dep->name)
+                    @endphp
+                    @if ($selected == $dep->id)
+                        <option class="selected-option" selected value = {{ $dep->id }}>{{$name}}</option>
+                    @else
+                        <option class="selected-option" value = {{$dep->id}}>{{$name}}</option>
+                    @endif
+                @endforeach
 
               {{-- {% for department in departmentArray %}
                   {% set name =  department['name']|lower|ucwords %}
