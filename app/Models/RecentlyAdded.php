@@ -13,4 +13,7 @@ class RecentlyAdded extends Model
     protected $primaryKey = 'product_sku';
     public $incrementing = false;
 
+    protected $fillable = [
+        'product_sku'
+    ];
 }

@@ -12,4 +12,7 @@ class Products extends Model
     protected $primaryKey = 'product_sku';
     public $incrementing = false;
 
+    protected $fillable = [
+        'product_sku', 'product_name', 'description', 'regular_price', 'sale_price', 'product_url', 'image_url', 'department_id'
+    ];
 }
