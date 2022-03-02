@@ -7,6 +7,7 @@ use App\Models\RecentlyAdded;
 use App\Models\RecentlyChanged;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
@@ -35,17 +36,17 @@ class HomeController extends Controller
             $skus = array_map(fn($o) => $o->sku, $most_recently_viewed);
 
             // Secondly, we get the some randomly picked recently added products from our database
-            $recently_added = $this->getRecentlyAdded(5);
+            $recently_added = $this->getRecentlyAdded(3);
 
             // Add our previous existing skus to the new skus from recently_added
             // $skus = array_merge($skus, array_map(function($o){return $o->sku;}, $recently_added));
 
             // Get 5 randomly recently changed items
-            $recently_changed = $this->getRecentlyChanged(5);
+            $recently_changed = $this->getRecentlyChanged(3);
 
             // $qo = new QueryObject(new MostViewedModel(), IndexController::$pdo);
 
-            MostViewed::all()->limit(15)->get();
+            MostViewed::all()->limit(3)->get();
 
             // Get the top 4 most viewed items
             // $most_viewed = $qo->select()->orderBy("counter", "desc")->limit(15)->execute()->fetchAll();
@@ -105,9 +106,9 @@ class HomeController extends Controller
 
         return view('home', [
             'products' => [],
-            'recentlyChanged'=> $this->getRecentlyChanged(6),
-            'recentlyAdded'=>$this->getRecentlyAdded(6),
-            'mostViewed'=>$this->getMostViewed(6),
+            'recentlyChanged'=> $this->getRecentlyChanged(3),
+            'recentlyAdded'=>$this->getRecentlyAdded(3),
+            'mostViewed'=>$this->getMostViewed(3),
             'recentlyViewed'=>[],
             'search_query'=>"",
             'prepend'=>""
@@ -141,12 +142,32 @@ class HomeController extends Controller
         return $data; # Return the data array
       }
 
-      private function getMostViewed(int $limit): Collection
+      private function getMostViewed(int $limit)
       {
-        $models = MostViewed::join('products', 'most_viewed.product_sku', '=', 'products.product_sku')
-        ->orderBy('most_viewed.updated_at')
-        ->take($limit)
-        ->get();
+        $sql = 'SELECT product_name, product_sku, regular_price, sale_price, image_url, product_url, lowest_price, highest_price, created_at, updated_at FROM
+        (
+             SELECT * FROM most_viewed AS ts
+             JOIN (
+                   SELECT product_sku as sku, MAX(regular_price) as highest_price, MIN(sale_price) as lowest_price
+                   FROM price_histories
+                   GROUP BY product_sku
+             ) AS ph
+              ON ts.product_sku = ph.sku
+              JOIN (
+                  SELECT product_name, product_sku as ps, regular_price, sale_price, image_url, product_url
+                  FROM products
+              ) AS p
+              ON p.ps = ts.product_sku
+              LIMIT '.$limit.'
+
+        ) AS lp;';
+
+        $models = collect(DB::select(DB::raw($sql)));
+
+        // $models = MostViewed::join('products', 'most_viewed.product_sku', '=', 'products.product_sku')
+        // ->orderBy('most_viewed.updated_at')
+        // ->take($limit)
+        // ->get();
 
         return $models;
       }
@@ -163,21 +184,61 @@ class HomeController extends Controller
         return [];
       }
 
-      private function getRecentlyAdded(int $limit): Collection
+      private function getRecentlyAdded(int $limit)
       {
-          $models = RecentlyAdded::join('products', 'recently_added.product_sku', '=', 'products.product_sku')
-            ->orderBy('recently_added.updated_at')
-            ->take($limit)
-            ->get();
+          $sql = 'SELECT product_name, product_sku, regular_price, sale_price, image_url, product_url, lowest_price, highest_price, created_at, updated_at FROM
+          (
+               SELECT * FROM recently_added AS ts
+               JOIN (
+                     SELECT product_sku as sku, MAX(regular_price) as highest_price, MIN(sale_price) as lowest_price
+                     FROM price_histories
+                     GROUP BY product_sku
+               ) AS ph
+                ON ts.product_sku = ph.sku
+                JOIN (
+                    SELECT product_name, product_sku as ps, regular_price, sale_price, image_url, product_url
+                    FROM products
+                ) AS p
+                ON p.ps = ts.product_sku
+                LIMIT '.$limit.'
+
+          ) AS lp;';
+
+          $models = collect(DB::select(DB::raw($sql)));
+
+        //   $models = RecentlyAdded::join('products', 'recently_added.product_sku', '=', 'products.product_sku')
+        //     ->orderBy('recently_added.updated_at')
+        //     ->take($limit)
+        //     ->get();
 
         return $models;
       }
 
-      private function getRecentlyChanged(int $limit):Collection {
-          $models = RecentlyChanged::join('products', 'recently_changed.product_sku', '=', 'products.product_sku')
-            ->orderBy('recently_changed.updated_at')
-            ->take($limit)
-            ->get();
+      private function getRecentlyChanged(int $limit) {
+        $sql = 'SELECT product_name, product_sku, regular_price, sale_price, image_url, product_url, lowest_price, highest_price, created_at, updated_at FROM
+        (
+             SELECT * FROM recently_changed AS ts
+             JOIN (
+                   SELECT product_sku as sku, MAX(regular_price) as highest_price, MIN(sale_price) as lowest_price
+                   FROM price_histories
+                   GROUP BY product_sku
+             ) AS ph
+              ON ts.product_sku = ph.sku
+              JOIN (
+                  SELECT product_name, product_sku as ps, regular_price, sale_price, image_url, product_url
+                  FROM products
+              ) AS p
+              ON p.ps = ts.product_sku
+              LIMIT '.$limit.'
+
+        ) AS lp;';
+
+        $models = collect(DB::select(DB::raw($sql)));
+
+        // $models = RecentlyChanged::join('products', 'recently_changed.product_sku', '=', 'products.product_sku')
+        // ->orderBy('recently_changed.updated_at')
+        // ->take($limit)
+        // ->get();
 
         return $models;
       }
