@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Departments;
 use App\Models\RecentlyAdded;
 use App\Models\RecentlyChanged;
 use App\Models\TopSale;
@@ -16,6 +17,34 @@ use paha\SimpleBestBuy\ProductOptions;
 class BrowseController extends Controller
 {
     public function showTopSales($depID){
+
+        // Is this more efficient???
+        // $sql = 'SELECT product_sku, lowest_price, highest_price, created_at, updated_at FROM
+        //   (
+        //        SELECT * FROM top_sales AS ts
+        //        JOIN (
+        //              SELECT product_sku as sku, MAX(regular_price) as highest_price, MIN(sale_price) as lowest_price
+        //              FROM price_histories
+        //              GROUP BY product_sku
+        //        ) AS ph
+        //         ON ts.product_sku = ph.sku
+        //         LIMIT 100
+
+        //   ) AS lp;';
+
+        /**
+         * SELECT * FROM top_sales AS ts
+         * JOIN (
+         *      SELECT *, MAX(regular_price) as highest_price, MIN(sale_price) as lowest_price
+         *      FROM price_histories
+         *
+         *
+         * ) ON price_histories.product_sku = ts.product_sku
+         *
+         *
+         *
+         */
+
 
         // I'm not sure how to express this in eloquent ORM
         // $recents = DB::select(DB::raw
@@ -45,6 +74,8 @@ class BrowseController extends Controller
 
         return view('browse', [
             'products' => $finalProducs,
+            'departments' => $this->getDepartments(),
+            'selected' => $depID,
             'prepend'=>""
         ]);
     }
@@ -82,11 +113,13 @@ class BrowseController extends Controller
 
         return view('browse', [
             'products' => $finalProducs,
+            'departments' => $this->getDepartments(),
+            'selected' => $depID,
             'prepend'=>""
         ]);
     }
 
-    public function showRecentlyAdded($orderedProducts){
+    public function showRecentlyAdded($depID){
         // I'm not sure how to express this in eloquent ORM
         // $recents = DB::select(DB::raw
         // ('SELECT *, lowest_price, highest_price
@@ -112,17 +145,12 @@ class BrowseController extends Controller
             ->limit(100)
             ->get();
 
-        // error_log(print_r($recents));
-        // die();
-
-
         $finalProducs = $this->getApiData(collect($recents));
-
-        // error_log(print_r($orderedProducts));
-        // die();
 
         return view('browse', [
             'products' => $finalProducs,
+            'departments' => $this->getDepartments(),
+            'selected' => $depID,
             'prepend'=>""
         ]);
     }
@@ -171,5 +199,9 @@ class BrowseController extends Controller
         }
 
         return $finalProducts;
+    }
+
+    private function getDepartments() : Collection{
+        return Departments::all();
     }
 }
