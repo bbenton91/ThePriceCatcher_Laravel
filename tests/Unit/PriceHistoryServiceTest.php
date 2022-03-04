@@ -20,7 +20,7 @@ class PriceHistoryServiceTest extends TestCase
      */
     public function test_no_updates()
     {
-        $apiProduct = [
+        $apiProduct = (object)[
             'sku' => 1,
             'regularPrice' => 19.99,
             'salePrice' => 18.99,
@@ -57,7 +57,7 @@ class PriceHistoryServiceTest extends TestCase
     public function test_api_product_price_lower()
     {
 
-        $apiProduct = [
+        $apiProduct = (object)[
             'sku' => 1,
             'regularPrice' => 19.99,
             'salePrice' => 16.99,
@@ -101,7 +101,7 @@ class PriceHistoryServiceTest extends TestCase
 
     public function test_api_product_price_higher()
     {
-        $apiProduct = [
+        $apiProduct = (object)[
             'sku' => 1,
             'regularPrice' => 19.99,
             'salePrice' => 18.99,
@@ -145,7 +145,7 @@ class PriceHistoryServiceTest extends TestCase
 
     public function test_price_mismatch()
     {
-        $apiProduct = [
+        $apiProduct = (object)[
             'sku' => 1,
             'regularPrice' => 29.99,
             'salePrice' => 28.99,
@@ -184,7 +184,7 @@ class PriceHistoryServiceTest extends TestCase
     public function test_history_product_doesnt_exist()
     {
 
-        $apiProduct = [
+        $apiProduct = (object)[
             'sku' => 1,
             'regularPrice' => 29.99,
             'salePrice' => 28.99,
