@@ -24,36 +24,36 @@ class PriceHistoryService{
 
         // Convert the collection to an array where sku => item
         $orderedProducts = $APIproducts->mapWithKeys(fn($item, $key) =>
-            [$item['sku'] => $item]
+            [$item->sku => $item]
         );
 
         // Conver the collection to an array where sku => item
         $orderedModels = $models->mapWithKeys(fn($item, $key) =>
-            [$item['product_sku'] => $item]
+            [$item->product_sku => $item]
         );
 
 
         /** @var array $orderedProducts */
         /** @var string $key */
         foreach ($orderedProducts as $key => $product) {
-            $productRP = intval(ceil($product['regularPrice']*100));
-            $productSP = intval(ceil($product['salePrice']*100));
+            $productRP = intval(ceil($product->regularPrice*100));
+            $productSP = intval(ceil($product->salePrice*100));
 
             if(isset($orderedModels[$key])){ // If we can compare it, let's try
                 /** @var PriceHistoryModel $model */
                 $model = $orderedModels[$key];
 
-                $modelRP = intval(ceil($model['regular_price']));
-                $modelSP = intval(ceil($model['sale_price']));
+                $modelRP = intval(ceil($model->regular_price));
+                $modelSP = intval(ceil($model->sale_price));
 
 
                 // If either regular prices or sale prices don't match...
                 if($modelRP != $productRP || $modelSP != $productSP){
                     $newModel = $model->replicate();
-                    $newModel['product_sku'] = $model['product_sku'];
-                    $newModel['start_date'] = now()->toDateTimeString();
-                    $newModel['regular_price'] = $productRP;
-                    $newModel['sale_price'] = $productSP;
+                    $newModel->product_sku = $model->product_sku;
+                    $newModel->start_date = now()->toDateTimeString();
+                    $newModel->regular_price = $productRP;
+                    $newModel->sale_price = $productSP;
                     $inserts[] = $newModel;
                 }
 
@@ -61,7 +61,7 @@ class PriceHistoryService{
             }else{ // Otherwise it doesn't exist already, so add it
 
                 $insert = new PriceHistory([
-                    'product_sku' => $product[strval(ProductOptions::sku())],
+                    'product_sku' => $product->sku,
                     'start_date' => now()->toDateTimeString(),
                     'regular_price' => $productRP,
                     'sale_price' => $productSP
