@@ -21,11 +21,11 @@
 
             </a>
         </div>
-        <nav class="flex self-center text-xl pl-20 items-stretch h-full">
+        <nav class="flex self-center text-xl pl-20 items-stretch self-stretch">
             {{-- <div class="header_divider"></div> --}}
-            <a href={{$prepend."/"}} class="ml-8 px-2 items-center justify-center text-center h-full hover:bg-blue-100 w-48">Home</a>
-            <a href={{$prepend."/browse"}} class=" ml-8 px-2 items-center justify-center  text-center h-full hover:bg-blue-100 w-48">Browse Products</a>
-            <a href={{$prepend."/about"}} class=" ml-8 px-2 items-center justify-center  text-center h-full hover:bg-blue-100 w-48">About</a>
+            <a href={{$prepend."/"}} class="flex ml-8 px-2 items-center justify-center text-center h-full hover:bg-blue-100 w-48 ">Home</a>
+            <a href={{$prepend."/browse"}} class="flex ml-8 px-2 items-center justify-center text-center h-full hover:bg-blue-100 w-48">Browse Products</a>
+            <a href={{$prepend."/about"}} class="flex ml-8 px-2 items-center justify-center text-center h-full hover:bg-blue-100 w-48">About</a>
         </nav>
         {{-- @include('dropdown') --}}
     </div>
