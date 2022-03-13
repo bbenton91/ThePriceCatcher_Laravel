@@ -49,7 +49,7 @@
                 <div id="recently_changed_list" class="preview_item_list flex flex-wrap place-content-around">
                     @foreach ($products as $item)
                         <span class="mt-10">
-                            @include('singleListing', ['item' => $item])
+                            @include('singleListing', ['item' => $item, 'size' => 'w-30r'])
                         </span>
                     @endforeach
                 </div>
