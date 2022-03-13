@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'show']);
 
 Route::get('/browse', function() {
-    return redirect("/browse/topsales/-1");
+    return redirect("/browse/topSales/-1");
 });
 // Route::get('/browse/topsales/{depId}', [BrowseController::class, 'showTopSales']);
 // Route::get('/browse/recentlychanged/{depId}', [BrowseController::class, 'showRecentlyChanged']);
