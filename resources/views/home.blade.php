@@ -48,8 +48,8 @@
             <h2 class = "text-4xl mt-10 ml-4 mb-2">Recently Added Items</h2>
             <div id="recently_changed_list" class="preview_item_list flex mx-auto place-content-around">
                 @foreach ($recentlyAdded as $item)
-                    <span class="ml-4">
-                        @include('singleListing', ['item' => $item])
+                    <span class="ml-4 w-1/3">
+                        @include('singleListing', ['item' => $item, 'size' => 'w-full'])
                     </span>
                 @endforeach
             </div>
@@ -62,8 +62,8 @@
             <h2 class = "text-4xl mt-10 ml-4 mb-2">Most Viewed Items</h2>
             <div id="mostViewedList" class="preview_item_list flex mx-auto place-content-around">
                 @foreach ($mostViewed as $item)
-                    <span class="ml-4">
-                        @include('singleListing', ['item' => $item])
+                    <span class="ml-4 w-1/3">
+                        @include('singleListing', ['item' => $item, 'size' => 'w-full'])
                     </span>
                 @endforeach
             </div>
@@ -76,8 +76,8 @@
             <h2 class = "text-4xl mt-10 ml-4 mb-2">Recently Changed Items</h2>
             <div id="recentlyAddedList" class="preview_item_list flex mx-auto place-content-around">
                 @foreach ($recentlyChanged as $item)
-                    <span class="ml-4">
-                        @include('singleListing', ['item' => $item])
+                    <span class="ml-4 w-1/3">
+                        @include('singleListing', ['item' => $item, 'size' => 'w-full'])
                     </span>
                 @endforeach
             </div>
