@@ -32,7 +32,7 @@
     }
 @endphp
 
-<div class="w-30r h-48 flex flex-col drop-shadow-lg border rounded bg-gray-50">
+<div class="h-48 flex flex-col drop-shadow-lg border rounded bg-gray-50 {{$size}}">
     <div class="listing w-auto mb-2 flex">
         <img src={{$item->image_url}} alt="" class="ml-2 mt-2 max-w-70">
         <div class="flex flex-col place-content-around w-full items-end mr-2">
