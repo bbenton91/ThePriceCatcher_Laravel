@@ -13,5 +13,5 @@ class MostViewed extends Model
     protected $primaryKey = 'product_sku';
     public $incrementing = false;
 
-    public $fillable = ['product_sku'];
+    public $fillable = ['product_sku', 'counter'];
 }
