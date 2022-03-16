@@ -1,3 +1,48 @@
+.max-w-10 {
+    max-width: 10rem;
+}
+
+.max-w-5 {
+    max-width: 5rem;
+}
+
+.max-w-1 {
+    max-width: 1rem;
+}
+
+.max-w-80 {
+    max-width: 80%;
+}
+
+.max-w-70 {
+    max-width: 70%;
+}
+
+.w-30r{
+    width: 30rem;
+}
+
+.w-25r{
+    width: 25rem;
+}
+
+.w-20r{
+    width: 20rem;
+}
+
+.w-15r{
+    width: 15rem;
+}
+
+.w-10r{
+    width: 10rem;
+}
+
+
+.browse-color{
+    background-color: #526079;
+}
+
 .listing{
     max-height: 50%;
     min-height: 50%;
@@ -7,3 +52,138 @@
 .bestbuy-button{
     background-color: #ffe000;
 }
+
+.hidden{
+    visibility: hidden;
+}
+
+.hide-feedback-form{
+    visibility: hidden;
+    bottom: -200px;
+    opacity: 0;
+}
+
+.show-feedback-form{
+    visibility: show;
+    bottom: 25px;
+    opacity: 1;
+    transition: visibility 0s, bottom 1s ease, opacity 0.5s ease;
+}
+
+  /* Mobile */
+@media screen and (max-width: 1000px) {
+    .form-popup{
+      position: fixed;
+      width: 100%;
+      height: 100%;
+    }
+
+    .form-container{
+      margin: auto;
+      margin-top:5rem;
+      width: 90%;
+      height: 90%;
+      color: darkslategray;
+      background-color: ghostwhite;
+      border: 1px black solid;
+      box-shadow: 5px 5px 10px black;
+    }
+
+    #feedbackInnerContainer{
+      width: 90%;
+      margin: auto;
+      margin-top: 3rem;
+      height: 90%;
+    }
+
+    #feedbackInnerContainer h1{
+      font-size: 4rem;
+      font-style: italic;
+      margin-bottom: 2rem;
+    }
+
+    #feedbackEmail, #feedbackSubject{
+      width: 90%;
+      height: 5rem;
+      font-size: 2.5rem;
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+
+    #feedbackMessage {
+      width: 90%;
+      font-size: 2.5rem;
+      height: 90%;
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+
+    .feedback-label{
+      font-size: 3rem;
+    }
+
+    .button{
+      width: 20rem;
+      height: 7rem;
+      font-size: 2.5rem;
+    }
+
+    #feedbackButtons{
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+      width: 90%;
+      margin: auto;
+    }
+
+    #sendFeedbackButton{
+      margin-top: 20px;
+      margin-right: 10px;
+      font-size: 2rem;
+      cursor: pointer;
+      float:right;
+      border-radius: 4px;
+      border:2px solid rgb(58, 69, 85);
+      font-style: italic;
+    }
+  }
+
+  /* Desktop */
+  @media screen and (min-width: 1001px) {
+    .form-popup{
+      position: fixed;
+      bottom: 0px;
+      right: 15px;
+      border: 1px black solid;
+      background-color: ghostwhite;
+      box-shadow: 5px 5px 10px black;
+    }
+
+    .form-container{
+      margin: 0px;
+      width: 100%;
+      color: darkslategray;
+      margin: 10px;
+    }
+
+    .button{
+      width: 150px;
+      height: 40px;
+      font-size: 1.2rem;
+    }
+
+    #sendFeedbackButton{
+      margin-top: 20px;
+      margin-right: 10px;
+      font-size: 1.5rem;
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      float:right;
+    }
+
+    #feedbackEmail, #feedbackSubject, #feedbackMessage {
+      padding: 0.2rem;
+    }
+
+  }
