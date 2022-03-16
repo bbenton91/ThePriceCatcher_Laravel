@@ -18,8 +18,9 @@ class PriceHistoryService{
      *
      * @return Collection An array of PriceHistoryModel filled with data.
      */
-    static function CompareAPIResultsWithPriceHistory(Collection $APIproducts, Collection $models, $date = "NOW()"): Collection
+    static function CompareAPIResultsWithPriceHistory(Collection $APIproducts, Collection $models, $date = null): Collection
     {
+        $now = $now ?? now()->toDateTimeString();
         $inserts = [];
 
         // Convert the collection to an array where sku => item
@@ -46,7 +47,6 @@ class PriceHistoryService{
                 $modelRP = intval(ceil($model->regular_price));
                 $modelSP = intval(ceil($model->sale_price));
 
-
                 // If either regular prices or sale prices don't match...
                 if($modelRP != $productRP || $modelSP != $productSP){
                     $newModel = $model->replicate();
@@ -62,7 +62,7 @@ class PriceHistoryService{
 
                 $insert = new PriceHistory([
                     'product_sku' => $product->sku,
-                    'start_date' => now()->toDateTimeString(),
+                    'start_date' => $date,
                     'regular_price' => $productRP,
                     'sale_price' => $productSP
                 ]);
