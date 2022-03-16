@@ -46,7 +46,7 @@
       @if (count($recentlyAdded) > 0)
         <section id="recentlyViewedSection" class="w-10/12 mx-auto">
             <h2 class = "text-4xl mt-10 ml-4 mb-2">Recently Added Items</h2>
-            <div id="recently_changed_list" class="preview_item_list flex mx-auto place-content-around">
+            <div id="recently_changed_list" class="preview_item_list flex mx-auto">
                 @foreach ($recentlyAdded as $item)
                     <span class="ml-4 w-1/3">
                         @include('singleListing', ['item' => $item, 'size' => 'w-full'])
@@ -60,7 +60,7 @@
       @if (count($mostViewed) > 0)
         <section id="mostViewedSection" class="w-10/12 mx-auto">
             <h2 class = "text-4xl mt-10 ml-4 mb-2">Most Viewed Items</h2>
-            <div id="mostViewedList" class="preview_item_list flex mx-auto place-content-around">
+            <div id="mostViewedList" class="preview_item_list flex mx-auto">
                 @foreach ($mostViewed as $item)
                     <span class="ml-4 w-1/3">
                         @include('singleListing', ['item' => $item, 'size' => 'w-full'])
@@ -74,7 +74,7 @@
       @if (count($recentlyChanged) > 0)
         <section id="recentlyChangedSection" class="w-10/12 mx-auto">
             <h2 class = "text-4xl mt-10 ml-4 mb-2">Recently Changed Items</h2>
-            <div id="recentlyAddedList" class="preview_item_list flex mx-auto place-content-around">
+            <div id="recentlyAddedList" class="preview_item_list flex mx-auto ">
                 @foreach ($recentlyChanged as $item)
                     <span class="ml-4 w-1/3">
                         @include('singleListing', ['item' => $item, 'size' => 'w-full'])
