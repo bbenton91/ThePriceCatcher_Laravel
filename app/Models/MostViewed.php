@@ -12,4 +12,6 @@ class MostViewed extends Model
     protected $table = 'most_viewed'; //It wants to name the table 'most_vieweds' by default
     protected $primaryKey = 'product_sku';
     public $incrementing = false;
+
+    public $fillable = ['product_sku'];
 }
