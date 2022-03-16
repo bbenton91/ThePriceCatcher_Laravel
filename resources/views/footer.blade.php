@@ -1,4 +1,4 @@
-<footer id="footer">
+<footer id="footer" class="drop-shadow-sm border-2 mt-4">
     <script>
         function openForm() {
             document.getElementById("emailFormContainer").classList.remove("hide-feedback-form");
@@ -8,7 +8,7 @@
         function closeForm() {
             document.getElementById("emailFormContainer").classList.add("hide-feedback-form");
             document.getElementById("emailFormContainer").classList.remove("show-feedback-form");
-        } 
+        }
 
         function validateInput(container){
             const form = container.childNodes[1]; // Not sure why it has to be [1] but [0] returns empty text?
@@ -27,11 +27,11 @@
 
             // Client side validation
             let hasErrors = applyErrors(errors, form);
-                
+
             // If we had errors, don't proceed with sending it to the server
             if(hasErrors)
                 return false;
-            
+
             let data = `email=${email.value}&subject=${subject.value}&message=${message.value}`;
 
             var request = new XMLHttpRequest();
@@ -118,7 +118,7 @@
                         Please enter a message to send.
                     </p>
                 </div>
-                
+
                 <br>
                 <br>
 
@@ -126,9 +126,9 @@
                     <button type="button" class="button accept" onclick="validateInput(document.getElementById('emailFormContainer'))">Send</button><br>
                     <button type="button" class="button cancel" onclick="closeForm()">Close</button>
                 </div>
-                
+
             </div>
-            
+
         </div>
     </div>
 </footer>
