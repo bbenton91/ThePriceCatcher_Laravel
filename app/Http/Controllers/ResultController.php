@@ -23,14 +23,11 @@ class ResultController extends Controller
         try{
             $this->incrementMostViewed($sku);
 
-
             $counter = 0;
 
             while($counter < 5 && empty((array)$product)){
                 $apiData = $this->getApiData($sku);
                 $product = empty($apiData->products) ? [] : $apiData->products[0];
-                // echo print_r($product);
-                // die();
                 sleep(1);
                 $counter++;
             }
@@ -40,8 +37,6 @@ class ResultController extends Controller
             // $logger->log("Failed to get information on result for sku {$sku}", ILogger::LEVEL_ERROR);
             // $logger->log($e->getMessage());
             // $logger->log($e->getTraceAsString());
-            echo $e->getMessage();
-            die();
             header("Location: /error500");
             return;
         }
@@ -98,12 +93,16 @@ class ResultController extends Controller
 
     private function incrementMostViewed(int $sku){
         $model = MostViewed::find($sku);
-        $counter = $model == null ? 0 : $model->counter;
+        $counter = ($model == null ? 0 : $model->counter) + 1;
 
-        // MostViewed::updateOrCreate([
-        //     'product_sku' => $sku,
-        //     'counter' => $counter+1
-        // ]);
+        MostViewed::updateOrCreate(
+            [
+                'product_sku' => $sku
+            ],
+            [
+                'counter' => $counter
+            ]
+        );
     }
 
     private function makeResultChart(int $sku, $currDate):string {
