@@ -16,7 +16,7 @@
 
 
 @php
-    $redirect = "results/".$item->product_sku;
+    $redirect = "/result/".$item->product_sku;
     $hp = isset($item->highest_price) ? $item->highest_price : 0;
     $lp = isset($item->lowest_price) ? $item->lowest_price : 0;
 
@@ -61,7 +61,7 @@
             <span class="text-blue-600">View Product</span>
         </a>
 
-        <a href={{$item->product_url}} class="w-full mx-2">
+        <a href={{$redirect}} class="w-full mx-2">
             {{-- <button class="w-full bestbuy-button h-full font-semibold text-base">View Product</button> --}}
             <span class="text-blue-600">View History</span>
         </a>
