@@ -64,7 +64,7 @@ class GatherRecentlyAddedProducts{
         $products = Products::all();
 
         $products = $products->filter(function($value, $key){
-            return strtotime('-1 day') < strtotime($value->created_at); // Checks if the model is older than 1 day
+            return strtotime('-1 day') > strtotime($value->created_at); // Checks if the model is older than 1 day
         });
 
 
@@ -147,8 +147,7 @@ class GatherRecentlyAddedProducts{
                 GROUP BY product_sku
             ) ph2
             on ph.product_sku = ph2.product_sku
-            and ph.start_date = ph2.maxdate
-            LIMIT 1;
+            and ph.start_date = ph2.maxdate;
         ';
 
         $latestProducts = DB::select(DB::raw($sql));
