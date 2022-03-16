@@ -30,6 +30,10 @@
         <h3 class="italic pt-2 pb-2 text-center text-lg text-gray-600 font-heavy border-t border-b mt-3">A website dedicated to tracking BestBuy prices.</h3>
       </section>
 
+      {{-- <section class="text-center">
+          {{$productsTracked}} total products being tracked.
+      </section> --}}
+
       <section class = "text-xl mt-5 w-10/12 mx-auto">
         <p>Welcome to a price tracking website for <a href="https://www.bestbuy.com/">BestBuy.com</a>. The price tracking began on Febuary 6th 2020 and
             has been tracking all prices since.</p>

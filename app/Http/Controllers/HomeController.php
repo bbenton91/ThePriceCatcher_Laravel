@@ -104,12 +104,21 @@ class HomeController extends Controller
 
         // file_get_contents("https://api.bestbuy.com/v1/products(sku%20in%20(5489800))?show=sku,name,regularPrice,salePrice,class,classId,subclass,subclassId,department,departmentId,categoryPath,itemUpdateDate,longDescription,largeImage,url,startDate,new,addToCartUrl&pageSize=100&format=json&apiKey=kopWJoIdBo27npGCLTOP3BlX");
 
+        $individualProductsTracked = DB::select(DB::raw(' SELECT COUNT(*) as total
+            FROM (SELECT product_sku FROM price_histories GROUP BY product_sku)
+            AS ph;
+        '))[0]->total;
+
+        // error_log(print_r($individualProductsTracked));
+        // die();
+
         return view('home', [
             'products' => [],
             'recentlyChanged'=> $this->getRecentlyChanged(3),
             'recentlyAdded'=>$this->getRecentlyAdded(3),
             'mostViewed'=>$this->getMostViewed(3),
             'recentlyViewed'=>[],
+            'productsTracked'=>$individualProductsTracked,
             'search_query'=>"",
             'prepend'=>""
         ]);
