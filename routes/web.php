@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BrowseController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ResultController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,6 +21,9 @@ Route::get('/', [HomeController::class, 'show']);
 Route::get('/browse', function() {
     return redirect("/browse/topSales/-1");
 });
+
+Route::get('/result/{id}', [ResultController::class, 'show']);
+
 // Route::get('/browse/topsales/{depId}', [BrowseController::class, 'showTopSales']);
 // Route::get('/browse/recentlychanged/{depId}', [BrowseController::class, 'showRecentlyChanged']);
 // Route::get('/browse/recentlyadded/{depId}', [BrowseController::class, 'showRecentlyAdded']);
