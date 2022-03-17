@@ -20,7 +20,7 @@ class PriceHistoryService{
      */
     static function CompareAPIResultsWithPriceHistory(Collection $APIproducts, Collection $models, $date = null): Collection
     {
-        $now = $now ?? now()->toDateTimeString();
+        $date = $date ?? now()->toDateTimeString();
         $inserts = [];
 
         // Convert the collection to an array where sku => item
@@ -49,11 +49,13 @@ class PriceHistoryService{
 
                 // If either regular prices or sale prices don't match...
                 if($modelRP != $productRP || $modelSP != $productSP){
-                    $newModel = $model->replicate();
-                    $newModel->product_sku = $model->product_sku;
-                    $newModel->start_date = now()->toDateTimeString();
-                    $newModel->regular_price = $productRP;
-                    $newModel->sale_price = $productSP;
+                    $newModel = new PriceHistory([
+                        'product_sku' => $product->sku,
+                        'start_date' => $date,
+                        'regular_price' => $productRP,
+                        'sale_price' => $productSP
+                    ]);
+                    // error_log(print_r($newModel));
                     $inserts[] = $newModel;
                 }
 
