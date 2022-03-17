@@ -115,36 +115,6 @@ class GatherRecentlyAddedProducts{
                 ]);
             });
         });
-
-
-        // DB::transaction (function () use ($models) {
-        //     $models->each(function ($item) {
-        //         DB::table('recently_added')->insert(
-        //             [
-        //                 'product_sku' => $item->product_sku,
-        //                 'created_at' => now(),
-        //                 'added_at' => now()
-        //             ]
-        //         );
-        //     });
-        // });
-
-        // foreach ($models as $model) {
-        //     $model->save();
-        // }
-
-    //   $raQuery = new RecentlyAddedQuery(new RecentlyAddedModel(), $pdo); // Query object for recently added
-
-    //   $formattedInserts = array_map(fn($o)=>buildFromProduct($o), $products);
-
-    //   // Clear the table
-    //   $raQuery->fragment("DELETE FROM recentlyadded")->execute();
-
-    //   $chunks = array_chunk($formattedInserts, 100);
-    //   // We chunk this so we don't overload the query
-    //   foreach ($chunks as $chunk) {
-    //     $raQuery->insertMany($chunk)->execute();
-    //   }
     }
 
     private function addToProducts(Collection $models){
@@ -181,9 +151,6 @@ class GatherRecentlyAddedProducts{
 
         $latestProducts = DB::select(DB::raw($sql));
 
-        // error_log(print_r($apiProducts));
-        // die();
-
         $result = PriceHistoryService::CompareAPIResultsWithPriceHistory(collect($apiProducts), collect($latestProducts));
 
         DB::transaction (function () use ($result) {
@@ -191,27 +158,6 @@ class GatherRecentlyAddedProducts{
                 $item->save();
             });
         });
-
-        // foreach ($differences as $diff) {
-        //     $diff->save();
-        // }
-
-    //   $phQuery = new PriceHistoryQuery(new PriceHistoryModel(), $pdo); // Query object for price history
-
-    //   // Insert into the price history table
-    //   $skus = array_map(fn($o)=>$o->sku, $products); # Get sku array
-    //   $queryData = $phQuery->selectLatestPriceHistory($skus); # We query the price history table for the latest prices for each sku
-
-    //   // Then we compare the table data with the API data
-    //   $inserts = PriceHistoryController::CompareAPIResultsWithPriceHistory($products, $queryData);
-
-    //   // We chunk this so we don't overload the query
-    //   $chunks = array_chunk($inserts, 100);
-    //   foreach ($chunks as $chunk) {
-    //     $phQuery->insertMany($chunk)->execute();
-    //   }
-
-    //   return count($inserts);
 
         return count($result);
     }
