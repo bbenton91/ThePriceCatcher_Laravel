@@ -56,9 +56,12 @@
             </section>
         @endif
 
-        {{-- {% include "listings_template.html" %} --}}
+        <div class="mt-4">
+            @include('footer', ['prepend' => $prepend])
+        </div>
 
     </div>
-    {{-- {% include "footer_template.html" %} --}}
+
+
   </body>
 </html>
