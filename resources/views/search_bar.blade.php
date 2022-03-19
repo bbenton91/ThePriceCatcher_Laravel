@@ -1,7 +1,7 @@
 <div id="search_bar_div" class="m-auto flex flex-col items-center">
 
-    <form id="search_form" action={{"/pricecatcher/search/" }} class="w-4/12" method="get">
-        <input id="search_bar" type="text" name="query" value="{{ $search_query ?? "" }}" placeholder=" Search for items here" class="border-2 w-full h-12 drop-shadow rounded">
+    <form id="search_form" action={{"/search" }} class="w-4/12" method="get">
+        <input id="search_bar" type="text" name="query" value="{{ $search ?? "" }}" placeholder=" Search for items here" class="border-2 w-full h-12 drop-shadow rounded">
         {{-- <button id="search_button" type="submit"><img src={{$prepend."/img/search-white-48dp.svg"}}></button> --}}
     </form>
 
