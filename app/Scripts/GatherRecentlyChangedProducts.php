@@ -152,7 +152,6 @@ class GatherRecentlyAddedProducts{
 
         $latestProducts = DB::select(DB::raw($sql));
 
-
         $result = PriceHistoryService::CompareAPIResultsWithPriceHistory(collect($apiProducts), collect($latestProducts));
 
         DB::transaction (function () use ($result) {
