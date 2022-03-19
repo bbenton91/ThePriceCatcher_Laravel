@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\PriceHistory;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use paha\SimpleBestBuy\ProductOptions;
 
 class PriceHistoryService{
@@ -73,6 +74,39 @@ class PriceHistoryService{
         }
 
         return collect($inserts);
+    }
+
+    public static function addToPriceHistoryTable(array $apiProducts):int
+    {
+        $sql = 'SELECT *
+            FROM price_histories ph
+            INNER JOIN (
+                SELECT MAX(start_date) maxdate, product_sku
+                FROM price_histories
+                GROUP BY product_sku
+            ) ph2
+            on ph.product_sku = ph2.product_sku
+            and ph.start_date = ph2.maxdate;
+        ';
+
+        echo "what??";
+        // die();
+
+        $latestProducts = DB::select(DB::raw($sql));
+
+        echo "what??2";
+
+        $result = PriceHistoryService::CompareAPIResultsWithPriceHistory(collect($apiProducts), collect($latestProducts));
+
+        echo "what??3";
+
+        DB::transaction (function () use ($result) {
+            $result->each(function ($item) {
+                $item->save();
+            });
+        });
+
+        return count($result);
     }
 }
 
