@@ -14,6 +14,8 @@ use paha\SimpleBestBuy\ProductOptions;
 
 class ResultController extends Controller
 {
+    private $retryCount = 1;
+
     public function show($sku){
         $sku = intval($sku);
         session_start();
@@ -25,7 +27,7 @@ class ResultController extends Controller
 
             $counter = 0;
 
-            while($counter < 5 && empty((array)$product)){
+            while($counter < $this->retryCount && empty((array)$product)){
                 $apiData = $this->getApiData($sku);
                 $product = empty($apiData->products) ? [] : $apiData->products[0];
                 sleep(1);
