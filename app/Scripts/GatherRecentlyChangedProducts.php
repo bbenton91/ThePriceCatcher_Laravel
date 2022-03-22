@@ -45,7 +45,7 @@ class GatherRecentlyAddedProducts{
 
         echo "added ".count($recentModels)." to recently_changed and products tables \n";
 
-        $count = $this->addToPriceHistoryTable($data->products);
+        $count = PriceHistoryService::addToPriceHistoryTable($data->products);
 
         echo "added ".$count." to price_histories table \n";
     }
@@ -135,32 +135,6 @@ class GatherRecentlyAddedProducts{
                 ]);
             });
         });
-    }
-
-    private function addToPriceHistoryTable(array $apiProducts):int
-    {
-        $sql = 'SELECT *
-            FROM price_histories ph
-            INNER JOIN (
-                SELECT MAX(start_date) maxdate, product_sku
-                FROM price_histories
-                GROUP BY product_sku
-            ) ph2
-            on ph.product_sku = ph2.product_sku
-            and ph.start_date = ph2.maxdate;
-        ';
-
-        $latestProducts = DB::select(DB::raw($sql));
-
-        $result = PriceHistoryService::CompareAPIResultsWithPriceHistory(collect($apiProducts), collect($latestProducts));
-
-        DB::transaction (function () use ($result) {
-            $result->each(function ($item) {
-                $item->save();
-            });
-        });
-
-        return count($result);
     }
 
     /**
