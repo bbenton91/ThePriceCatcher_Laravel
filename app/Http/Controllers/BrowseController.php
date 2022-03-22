@@ -41,6 +41,8 @@ class BrowseController extends Controller
 
             // Or maybe this handles errors/empty products?
             if(count($skus) > 0){
+
+                // This gets the lowest and highest price of our skus
                 $ranges = DB::query()->fromSub(function($query){
                     $query->selectRaw('product_sku, MAX(regular_price) as highest_price, MIN(sale_price) as lowest_price')
                         ->from('price_histories')
@@ -76,20 +78,24 @@ class BrowseController extends Controller
     }
 
     public function showTopSales($depID){
+
+        // Query our top_sales table and join it with the max and min prices from our price_histories table and
+        // further join it with our products table for the product information
         $recents = DB::query()->fromSub(function($query){
             $query->selectRaw('product_sku, MAX(regular_price) as highest_price, MIN(sale_price) as lowest_price')
                 ->from('price_histories')
                 ->groupBy('product_sku');
         }, 'ph')
             ->join('top_sales AS ts', 'ts.product_sku', '=', 'ph.product_sku')
+            ->join('products AS p', 'p.product_sku', '=', 'ts.product_sku')
             ->groupBy('ts.product_sku')
             ->limit(100)
             ->get();
 
-        $finalProducs = $this->getApiData(collect($recents));
+        // $finalProducs = $this->getApiData(collect($recents));
 
         return view('browse', [
-            'products' => $finalProducs,
+            'products' => $recents,
             'departments' => $this->getDepartments(),
             'selected' => $depID,
             'prepend'=>""
@@ -97,24 +103,24 @@ class BrowseController extends Controller
     }
 
     public function showRecentlyChanged($depID){
+
+
         $recents = DB::query()->fromSub(function($query){
             $query->selectRaw('product_sku, MAX(regular_price) as highest_price, MIN(sale_price) as lowest_price')
                 ->from('price_histories')
                 ->groupBy('product_sku');
         }, 'ph')
             ->join('recently_changed AS rc', 'rc.product_sku', '=', 'ph.product_sku')
+            ->join('products AS p', 'p.product_sku', '=', 'rc.product_sku')
             ->groupBy('rc.product_sku')
             ->limit(100)
             ->get();
 
 
-        $finalProducs = $this->getApiData(collect($recents));
-
-        // error_log(print_r($orderedProducts));
-        // die();
+        // $finalProducs = $this->getApiData(collect($recents));
 
         return view('browse', [
-            'products' => $finalProducs,
+            'products' => $recents,
             'departments' => $this->getDepartments(),
             'selected' => $depID,
             'prepend'=>""
@@ -122,21 +128,24 @@ class BrowseController extends Controller
     }
 
     public function showRecentlyAdded($depID){
+
+
         $recents = DB::query()->fromSub(function($query){
+            // This gets the max and min prices when we join it
             $query->selectRaw('product_sku, MAX(regular_price) as highest_price, MIN(sale_price) as lowest_price')
                 ->from('price_histories')
                 ->groupBy('product_sku');
         }, 'ph')
-            ->join('recently_added AS ra', 'ra.product_sku', '=', 'ph.product_sku')
-            // ->on('ra.product_sku', '=', 'ph.product_sku')
+            ->join('recently_added AS ra', 'ra.product_sku', '=', 'ph.product_sku') // Join with the recently_added table
+            ->join('products AS p', 'p.product_sku', '=', 'ra.product_sku') // Join with the product table to get the info
             ->groupBy('ra.product_sku')
             ->limit(100)
             ->get();
 
-        $finalProducs = $this->getApiData(collect($recents));
+        // $finalProducs = $this->getApiData(collect($recents));
 
         return view('browse', [
-            'products' => $finalProducs,
+            'products' => $recents,
             'departments' => $this->getDepartments(),
             'selected' => $depID,
             'prepend'=>""
@@ -171,7 +180,6 @@ class BrowseController extends Controller
 
     private function combineData($orderedModels, $apiProducts): array{
         $finalProducts = [];
-
         foreach ($apiProducts as $p) {
             $dbp = null;
             if(isset($orderedModels[$p->sku]))
