@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BrowseController;
+use App\Http\Controllers\EmailSubscribeController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ResultController;
 use Illuminate\Http\Request;
@@ -17,6 +18,9 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+// Route::get('/email_subscribe', [EmailSubscribeController::class, 'store']);
+Route::post('/email_subscribe', [EmailSubscribeController::class, 'store'])->name('email_subscribe.post');
 
 Route::get('/', [HomeController::class, 'show']);
 
