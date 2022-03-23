@@ -1,8 +1,8 @@
 <script>
 
-function addEmail(emailField, successText, failText, urlParams){
-    const params = new URLSearchParams(urlParams);
-    let data = `email=${emailField.value}&sku=${params.get('sku')}`;
+function addEmail(emailField, successText, failText, url, token){
+    const sku = url.pathname.slice(url.pathname.lastIndexOf("/")+1);
+    let data = `email=${emailField.value}&sku=${sku}`;
 
     var request = new XMLHttpRequest();
 
@@ -10,24 +10,26 @@ function addEmail(emailField, successText, failText, urlParams){
     // doesn't catch it
     request.onload = () => {
         const resp = request.responseText;
-        console.log(resp);
 
         if(resp.length != 0){ // Don't apply errors if we have no response data
-            const errors = JSON.parse(resp);
-            if('email' in errors){
+            const results = JSON.parse(resp);
+            console.log(results);
+            if('error' in results){
                 failText.classList.remove("hidden");
                 successText.classList.add("hidden");
+            }else{
+                successText.classList.remove("hidden");
+                failText.classList.add("hidden");
+                emailField.value = "";
             }
             // applyErrors(errors, form)
-        }else{
-            successText.classList.remove("hidden");
-            failText.classList.add("hidden");
-            emailField.value = "";
         }
         // closeForm();
     }
 
-    request.open('POST', '../php/EmailSubscribe.php', true);
+    console.log(token);
+    request.open('POST', '/email_subscribe', true);
+    request.setRequestHeader('X-CSRF-TOKEN', token)
     request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
     request.send(data);
 }
@@ -86,18 +88,18 @@ function addEmail(emailField, successText, failText, urlParams){
 
             <br>
 
-            <div id="emailSubscribeDiv">
-                <h2>Subscribe to price drops for this product</h2>
+            <div id="emailSubscribeDiv" class="flex flex-col place-content-center place-items-center">
+                <h2 class="text-xl mb-2">Subscribe to price drops for this product</h2>
                 <div id="emailInputDiv">
-                    <input type="email" name="" id="emailInputText">
-                    <button type="button" class="button accept"
+                    <input type="email" name="" id="emailInputText" class="drop-shadow-md border w-64 h-10">
+                    <button type="button" class="border-2 bg-green-400 w-32 h-10 font-semibold mb-2"
                         onclick="addEmail(document.getElementById('emailInputText'),
                         document.getElementById('subscribeSuccessText'),
                         document.getElementById('subscribeFailText'),
-                        window.location.search)">Send</button>
+                        window.location, '{{csrf_token()}}') ">Send</button>
                     <br>
-                    <p class="successful hidden subscribeText" id="subscribeSuccessText">Success! Thanks for subscribing!</p>
-                    <p class="error-text hidden subscribeText" id="subscribeFailText">Invalid email address. Please enter a valid email</p>
+                    <p class="hidden text-green-600" id="subscribeSuccessText">Success! Thanks for subscribing!</p>
+                    <p class="hidden text-red-500" id="subscribeFailText">Invalid email address. Please enter a valid email</p>
                 </div>
             </div>
         </div>
