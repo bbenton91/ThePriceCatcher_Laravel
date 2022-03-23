@@ -38,23 +38,15 @@ class HomeController extends Controller
             // Secondly, we get the some randomly picked recently added products from our database
             $recently_added = $this->getRecentlyAdded(3);
 
-            // Add our previous existing skus to the new skus from recently_added
-            // $skus = array_merge($skus, array_map(function($o){return $o->sku;}, $recently_added));
-
             // Get 5 randomly recently changed items
             $recently_changed = $this->getRecentlyChanged(3);
 
-            // $qo = new QueryObject(new MostViewedModel(), IndexController::$pdo);
-
             MostViewed::all()->limit(3)->get();
 
-            // Get the top 4 most viewed items
-            // $most_viewed = $qo->select()->orderBy("counter", "desc")->limit(15)->execute()->fetchAll();
-            // $most_viewed = ObjectHelper::rekey_array_by_sku($most_viewed); // Rekey the array by sku
-
-            // $skus = array_merge($skus, array_map(function($o){return $o->sku;}, $most_viewed));
-
             $end_db = microtime(true)-$start;
+
+            error_log("Took ".$end_db." seconds to pull from database");
+
             $start_api = microtime(true);
 
         }catch (Exception $e){
@@ -63,54 +55,10 @@ class HomeController extends Controller
             // header("Location: error500.php");
         }
 
-        // Add our previous existing skus to the new skus from recently_added
-        // $skus = array_merge($skus, array_map(function($o){return $o->sku;}, $recently_changed));
-        // $skus = array_filter($skus, fn($o)=>$o > 0); // We need to filter out only positive (non-zero) values.
-
-        // $options = new APIOptions();
-        // $options->restrictions = ProductOptions::sku()." in (".implode(",", $skus).")";
-        // $options->optionsToShow = [ProductOptions::sku(), ProductOptions::name(), ProductOptions::regularPrice(), ProductOptions::salePrice(), ProductOptions::class(),
-        //     ProductOptions::classId(), ProductOptions::subclass(), ProductOptions::subclassId(), ProductOptions::department(), ProductOptions::departmentId(), ProductOptions::categoryPath(),
-        //     ProductOptions::itemUpdateDate(), ProductOptions::longDescription(), ProductOptions::largeImage(), ProductOptions::url(), ProductOptions::startDate(), ProductOptions::new(),
-        //     ProductOptions::addToCartUrl()];
-
-        // $api = new BestBuyAPI();
-
-        // Lastly, we make 1 api call to gather all of the products by sku number here.
-        // $products = $sd->get_by_sku($skus);
-        // $data = $api->fetch(APIQueryBuilder::products($options));
-        // if($data->error !== ""){
-        //     $logger->log("There was an error getting products on the front page.", ILogger::LEVEL_ERROR);
-        //     header("Location: /error500");
-        //     return;
-        // }
-
-        // $products = $data->products;
-        // $products = ObjectHelper::rekey_array_by_sku($products);
-
-        // var_dump($products);
-        // $end_api = microtime(true)-$start_api;
-
-
-        // return view('user.profile', [
-        //     'products' => $products,
-        //     'recently_changed'=>HomeController::prepare_listing($recently_changed, $products, 4),
-        //     'recently_added'=>HomeController::prepare_listing($recently_added, $products, 4),
-        //     'most_viewed'=>HomeController::prepare_listing($most_viewed, $products, 4),
-        //     'recently_viewed'=>HomeController::prepare_listing($most_recently_viewed, $products, 4),
-        //     'search_query'=>"",
-        //     'prepend'=>Environment::PrependUrl()
-        // ]);
-
-        // file_get_contents("https://api.bestbuy.com/v1/products(sku%20in%20(5489800))?show=sku,name,regularPrice,salePrice,class,classId,subclass,subclassId,department,departmentId,categoryPath,itemUpdateDate,longDescription,largeImage,url,startDate,new,addToCartUrl&pageSize=100&format=json&apiKey=kopWJoIdBo27npGCLTOP3BlX");
-
         $individualProductsTracked = DB::select(DB::raw(' SELECT COUNT(*) as total
             FROM (SELECT product_sku FROM price_histories GROUP BY product_sku)
             AS ph;
         '))[0]->total;
-
-        // error_log(print_r($individualProductsTracked));
-        // die();
 
         return view('home', [
             'products' => [],
@@ -173,22 +121,11 @@ class HomeController extends Controller
 
         $models = collect(DB::select(DB::raw($sql)));
 
-        // $models = MostViewed::join('products', 'most_viewed.product_sku', '=', 'products.product_sku')
-        // ->orderBy('most_viewed.updated_at')
-        // ->take($limit)
-        // ->get();
-
         return $models;
       }
 
       private static function getRecentlyViewed(array $recentlyViewedSession):array
       {
-        // // Make them into standard product objects
-        // $most_recently_viewed = array_map(function($o){return Product::from_table_object($o);}, $recentlyViewedSession);
-
-
-        // // Rekey the array by sku
-        // $most_recently_viewed = ObjectHelper::rekey_array_by_sku($most_recently_viewed);
 
         return [];
       }
@@ -215,11 +152,6 @@ class HomeController extends Controller
 
           $models = collect(DB::select(DB::raw($sql)));
 
-        //   $models = RecentlyAdded::join('products', 'recently_added.product_sku', '=', 'products.product_sku')
-        //     ->orderBy('recently_added.updated_at')
-        //     ->take($limit)
-        //     ->get();
-
         return $models;
       }
 
@@ -243,11 +175,6 @@ class HomeController extends Controller
         ) AS lp;';
 
         $models = collect(DB::select(DB::raw($sql)));
-
-        // $models = RecentlyChanged::join('products', 'recently_changed.product_sku', '=', 'products.product_sku')
-        // ->orderBy('recently_changed.updated_at')
-        // ->take($limit)
-        // ->get();
 
         return $models;
       }
