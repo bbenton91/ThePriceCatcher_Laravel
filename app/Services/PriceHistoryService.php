@@ -89,16 +89,16 @@ class PriceHistoryService{
             and ph.start_date = ph2.maxdate;
         ';
 
-        echo "what??";
+        // echo "what??";
         // die();
 
         $latestProducts = DB::select(DB::raw($sql));
 
-        echo "what??2";
+        // echo "what??2";
 
         $result = PriceHistoryService::CompareAPIResultsWithPriceHistory(collect($apiProducts), collect($latestProducts));
 
-        echo "what??3";
+        // echo "what??3";
 
         DB::transaction (function () use ($result) {
             $result->each(function ($item) {
