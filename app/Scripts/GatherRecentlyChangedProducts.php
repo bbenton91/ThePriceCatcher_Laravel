@@ -26,7 +26,7 @@ class GatherRecentlyAddedProducts{
     public function gather(){
         echo "starting product gather \n";
         // $days_ago = "10";
-        $data = $this->gatherProducts(1, 5, "1");
+        $data = $this->gatherProducts(1, 5, env('SCRIPT_GATHER_RECENTLY_ADDED_DAYS', '1'));
 
         $recentModels = array_map(fn($p) => $this->buildRecentlyChanged($p), $data->products);
         $productModels = array_map(fn($p) => $this->buildProduct($p), $data->products);
