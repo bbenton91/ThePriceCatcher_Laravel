@@ -12,4 +12,8 @@ class TopSale extends Model
     protected $table = 'top_sales';
     protected $primaryKey = 'product_sku';
     public $incrementing = false;
+
+    protected $fillable = [
+        'product_sku'
+    ];
 }
