@@ -14,7 +14,7 @@ class ObjectHelperTest extends TestCase
      *
      * @return void
      */
-    public function test_example()
+    public function test_basic()
     {
         Products::factory()->count(2)->create();
 
