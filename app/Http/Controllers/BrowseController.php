@@ -42,6 +42,8 @@ class BrowseController extends Controller
             // Or maybe this handles errors/empty products?
             if(count($skus) > 0){
 
+                
+
                 // This gets the lowest and highest price of our skus
                 $ranges = DB::query()->fromSub(function($query){
                     $query->selectRaw('product_sku, MAX(regular_price) as highest_price, MIN(sale_price) as lowest_price')
@@ -79,20 +81,10 @@ class BrowseController extends Controller
 
     public function showTopSales($depID){
 
-        // Query our top_sales table and join it with the max and min prices from our price_histories table and
-        // further join it with our products table for the product information
-        $recents = DB::query()->fromSub(function($query){
-            $query->selectRaw('product_sku, MAX(regular_price) as highest_price, MIN(sale_price) as lowest_price')
-                ->from('price_histories')
-                ->groupBy('product_sku');
-        }, 'ph')
-            ->join('top_sales AS ts', 'ts.product_sku', '=', 'ph.product_sku')
-            ->join('products AS p', 'p.product_sku', '=', 'ts.product_sku')
-            ->groupBy('ts.product_sku')
-            ->limit(100)
-            ->get();
-
-        // $finalProducs = $this->getApiData(collect($recents));
+        $recents = TopSale::limit(100)
+                    ->join('product_prices', 'top_sales.product_sku', '=', 'product_prices.product_sku')
+                    ->join('products', 'top_sales.product_sku', '=', 'products.product_sku')
+                    ->get();
 
         return view('browse', [
             'products' => $recents,
@@ -104,20 +96,10 @@ class BrowseController extends Controller
 
     public function showRecentlyChanged($depID){
 
-
-        $recents = DB::query()->fromSub(function($query){
-            $query->selectRaw('product_sku, MAX(regular_price) as highest_price, MIN(sale_price) as lowest_price')
-                ->from('price_histories')
-                ->groupBy('product_sku');
-        }, 'ph')
-            ->join('recently_changed AS rc', 'rc.product_sku', '=', 'ph.product_sku')
-            ->join('products AS p', 'p.product_sku', '=', 'rc.product_sku')
-            ->groupBy('rc.product_sku')
-            ->limit(100)
-            ->get();
-
-
-        // $finalProducs = $this->getApiData(collect($recents));
+        $recents = RecentlyChanged::limit(100)
+                    ->join('product_prices', 'recently_changed.product_sku', '=', 'product_prices.product_sku')
+                    ->join('products', 'recently_changed.product_sku', '=', 'products.product_sku')
+                    ->get();
 
         return view('browse', [
             'products' => $recents,
@@ -129,20 +111,11 @@ class BrowseController extends Controller
 
     public function showRecentlyAdded($depID){
 
+        $recents = RecentlyAdded::limit(100)
+                    ->join('product_prices', 'recently_added.product_sku', '=', 'product_prices.product_sku')
+                    ->join('products', 'recently_added.product_sku', '=', 'products.product_sku')
+                    ->get();
 
-        $recents = DB::query()->fromSub(function($query){
-            // This gets the max and min prices when we join it
-            $query->selectRaw('product_sku, MAX(regular_price) as highest_price, MIN(sale_price) as lowest_price')
-                ->from('price_histories')
-                ->groupBy('product_sku');
-        }, 'ph')
-            ->join('recently_added AS ra', 'ra.product_sku', '=', 'ph.product_sku') // Join with the recently_added table
-            ->join('products AS p', 'p.product_sku', '=', 'ra.product_sku') // Join with the product table to get the info
-            ->groupBy('ra.product_sku')
-            ->limit(100)
-            ->get();
-
-        // $finalProducs = $this->getApiData(collect($recents));
 
         return view('browse', [
             'products' => $recents,
@@ -162,8 +135,6 @@ class BrowseController extends Controller
         );
 
         $s = ProductOptions::sku()." in (".implode(",", $skus).")";
-        // error_log(print_r($s));
-        // die();
 
         $api = new BestBuyAPI();
         $options = new APIOptions();
