@@ -8,6 +8,7 @@ use App\Models\RecentlyChanged;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class HomeController extends Controller
 {
@@ -28,26 +29,30 @@ class HomeController extends Controller
 
         $start = microtime(true);
 
+        $recentlyChanged = [];
+        $recentlyAdded = [];
+        $mostViewed = [];
+
         try{
-            // First, we get the recently view list from our session
-            $most_recently_viewed = HomeController::getRecentlyViewed($_SESSION['recently_viewed']);
-
-            // Get the first set of skus
-            $skus = array_map(fn($o) => $o->sku, $most_recently_viewed);
-
-            // Secondly, we get the some randomly picked recently added products from our database
-            $recently_added = $this->getRecentlyAdded(3);
-
-            // Get 5 randomly recently changed items
-            $recently_changed = $this->getRecentlyChanged(3);
-
-            MostViewed::all()->limit(3)->get();
+            $recentlyChanged = $this->getRecentlyChanged(3);
 
             $end_db = microtime(true)-$start;
+            Log::debug('RecentlyChanged gathering took '.$end_db.' seconds');
+            $start = microtime(true);
 
-            error_log("Took ".$end_db." seconds to pull from database");
+            $recentlyAdded = $this->getRecentlyAdded(3);
 
-            $start_api = microtime(true);
+            $end_db = microtime(true)-$start;
+            Log::debug('RecentlyAdded database gathering took '.$end_db.' seconds');
+            $start = microtime(true);
+
+            $mostViewed = $this->getMostViewed(3);
+
+            $end_db = microtime(true)-$start;
+            Log::debug('MostViewed database gathering took '.$end_db.' seconds');
+            // Log::channel('daily')->debug('Home controller database gathering took '.$end_db.' seconds');
+
+            // $start_api = microtime(true);
 
         }catch (Exception $e){
             // $logger->log($e->getMessage(), ILogger::LEVEL_ERROR);
@@ -62,9 +67,9 @@ class HomeController extends Controller
 
         return view('home', [
             'products' => [],
-            'recentlyChanged'=> $this->getRecentlyChanged(3),
-            'recentlyAdded'=>$this->getRecentlyAdded(3),
-            'mostViewed'=>$this->getMostViewed(3),
+            'recentlyChanged'=> $recentlyChanged,
+            'recentlyAdded'=>$recentlyAdded,
+            'mostViewed'=>$mostViewed,
             'recentlyViewed'=>[],
             'productsTracked'=>$individualProductsTracked,
             'search_query'=>"",
@@ -101,23 +106,15 @@ class HomeController extends Controller
 
       private function getMostViewed(int $limit)
       {
-        $sql = 'SELECT product_name, product_sku, regular_price, sale_price, image_url, product_url, lowest_price, highest_price, created_at, updated_at FROM
-        (
-             SELECT * FROM most_viewed AS ts
-             JOIN (
-                   SELECT product_sku as sku, MAX(regular_price) as highest_price, MIN(sale_price) as lowest_price
-                   FROM price_histories
-                   GROUP BY product_sku
-             ) AS ph
-              ON ts.product_sku = ph.sku
-              JOIN (
-                  SELECT product_name, product_sku as ps, regular_price, sale_price, image_url, product_url
-                  FROM products
-              ) AS p
-              ON p.ps = ts.product_sku
-              LIMIT '.$limit.'
+        // This is how we do it for ALL rows in most_viewed
 
-        ) AS lp;';
+        $sql = ' SELECT * from most_viewed as mv
+                JOIN product_prices as pp
+                ON mv.product_sku = pp.product_sku
+                JOIN products as p
+                ON mv.product_sku = p.product_sku
+                LIMIT '.$limit.';
+        ';
 
         $models = collect(DB::select(DB::raw($sql)));
 
@@ -130,49 +127,30 @@ class HomeController extends Controller
         return [];
       }
 
-      private function getRecentlyAdded(int $limit)
-      {
-          $sql = 'SELECT product_name, product_sku, regular_price, sale_price, image_url, product_url, lowest_price, highest_price, created_at, updated_at FROM
-          (
-               SELECT * FROM recently_added AS ts
-               JOIN (
-                     SELECT product_sku as sku, MAX(regular_price) as highest_price, MIN(sale_price) as lowest_price
-                     FROM price_histories
-                     GROUP BY product_sku
-               ) AS ph
-                ON ts.product_sku = ph.sku
-                JOIN (
-                    SELECT product_name, product_sku as ps, regular_price, sale_price, image_url, product_url
-                    FROM products
-                ) AS p
-                ON p.ps = ts.product_sku
-                LIMIT '.$limit.'
+    private function getRecentlyAdded(int $limit)
+    {
 
-          ) AS lp;';
+        $sql = ' SELECT * from recently_added as ra
+                JOIN product_prices as pp
+                ON ra.product_sku = pp.product_sku
+                JOIN products as p
+                ON ra.product_sku = p.product_sku
+                LIMIT '.$limit.';
+        ';
 
           $models = collect(DB::select(DB::raw($sql)));
 
         return $models;
       }
 
-      private function getRecentlyChanged(int $limit) {
-        $sql = 'SELECT product_name, product_sku, regular_price, sale_price, image_url, product_url, lowest_price, highest_price, created_at, updated_at FROM
-        (
-             SELECT * FROM recently_changed AS ts
-             JOIN (
-                   SELECT product_sku as sku, MAX(regular_price) as highest_price, MIN(sale_price) as lowest_price
-                   FROM price_histories
-                   GROUP BY product_sku
-             ) AS ph
-              ON ts.product_sku = ph.sku
-              JOIN (
-                  SELECT product_name, product_sku as ps, regular_price, sale_price, image_url, product_url
-                  FROM products
-              ) AS p
-              ON p.ps = ts.product_sku
-              LIMIT '.$limit.'
-
-        ) AS lp;';
+    private function getRecentlyChanged(int $limit) {
+        $sql = ' SELECT * from recently_changed as rc
+                JOIN product_prices as pp
+                ON rc.product_sku = pp.product_sku
+                JOIN products as p
+                ON rc.product_sku = p.product_sku
+                LIMIT '.$limit.';
+        ';
 
         $models = collect(DB::select(DB::raw($sql)));
 
