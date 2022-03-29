@@ -121,7 +121,7 @@ class PriceHistoryServiceTest extends TestCase
         // Compare and get what needs to be resaved
         $result = PriceHistoryService::CompareAPIResultsWithPriceHistory(collect([$apiProduct]), collect([$priceHistoryModel]));
 
-        error_log(print_r($result->first()));
+        // error_log(print_r($result->first()));
 
         DB::transaction (function () use ($result) {
             $result->each(function ($item) {
@@ -265,7 +265,7 @@ class PriceHistoryServiceTest extends TestCase
         ];
 
         $priceHistoryModel = PriceHistory::where('product_sku', 1)->orderBy('id', 'DESC')->first();
-        error_log(print_r($priceHistoryModel));
+        // error_log(print_r($priceHistoryModel));
 
         $result = PriceHistoryService::CompareAPIResultsWithPriceHistory(collect([$secondApiProduct]), collect([$priceHistoryModel]), now()->addMinutes(2)->toDateTimeString());
 
@@ -281,5 +281,6 @@ class PriceHistoryServiceTest extends TestCase
         $this->assertTrue($priceHistoryModel['sale_price'] == 2899);
         $this->assertTrue($priceHistoryModel['regular_price'] == 2999);
 
+        DB::table('price_histories')->truncate();
     }
 }
