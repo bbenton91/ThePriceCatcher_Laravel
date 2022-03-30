@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Departments;
+use App\Models\ProductPrices;
 use App\Models\RecentlyAdded;
 use App\Models\RecentlyChanged;
 use App\Models\TopSale;
@@ -42,19 +43,7 @@ class BrowseController extends Controller
             // Or maybe this handles errors/empty products?
             if(count($skus) > 0){
 
-                
-
-                // This gets the lowest and highest price of our skus
-                $ranges = DB::query()->fromSub(function($query){
-                    $query->selectRaw('product_sku, MAX(regular_price) as highest_price, MIN(sale_price) as lowest_price')
-                        ->from('price_histories')
-                        ->groupBy('product_sku');
-                }, 'ph')
-                    ->join('price_histories AS ph2', 'ph2.product_sku', '=', 'ph.product_sku')
-                    ->whereIn('ph2.product_sku', $skus)
-                    ->groupBy('ph2.product_sku')
-                    ->get();
-
+                $ranges = ProductPrices::whereIn('product_sku', $skus)->get();
 
                 // Map by product_sku
                 $orderedModels = $ranges->mapWithKeys(fn($item, $key) =>
