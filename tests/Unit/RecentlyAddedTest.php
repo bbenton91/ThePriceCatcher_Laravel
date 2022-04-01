@@ -9,7 +9,6 @@ use Tests\TestCase;
 
 class RecentlyAddedTest extends TestCase
 {
-    use RefreshDatabase;
 
     /**
      * A basic unit test example.
@@ -25,7 +24,7 @@ class RecentlyAddedTest extends TestCase
         $model = RecentlyAdded::find(1);
         $this->assertTrue($model != null);
 
-        $this->refreshDatabase();
+        RecentlyAdded::truncate();
     }
 
     public function test_products_match(){
@@ -39,7 +38,8 @@ class RecentlyAddedTest extends TestCase
         $model = RecentlyAdded::join('products', 'recently_added.product_sku', '=', 'products.product_sku')->first();
         $this->assertTrue($model != null);
 
-        $this->refreshDatabase();
+        RecentlyAdded::truncate();
+        Products::truncate();
     }
 
     /**
@@ -58,7 +58,8 @@ class RecentlyAddedTest extends TestCase
         $model = RecentlyAdded::join('products', 'recently_added.product_sku', '=', 'products.product_sku')->first();
         $this->assertTrue($model == null);
 
-        $this->refreshDatabase();
+        RecentlyAdded::truncate();
+        Products::truncate();
     }
 
     public function test_adding(){
@@ -66,7 +67,8 @@ class RecentlyAddedTest extends TestCase
         $models = RecentlyAdded::all()->count();
         $this->assertTrue($models == 10);
 
-        $this->refreshDatabase();
+        RecentlyAdded::truncate();
+        Products::truncate();
     }
 
 }

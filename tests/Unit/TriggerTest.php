@@ -10,7 +10,6 @@ use Tests\TestCase;
 
 class TriggerTest extends TestCase
 {
-    use RefreshDatabase;
 
     /**
      * Test the trigger interaction between the recently_added and products table
@@ -36,11 +35,12 @@ class TriggerTest extends TestCase
         RecentlyAdded::find(1)->delete();
         $model = Products::find(1);
 
-        error_log(print_r($model));
+        // error_log(print_r($model));
         // Make sure the model is null. This should test the trigger set on the recently_added table
         $this->assertTrue($model == null);
 
-        $this->refreshDatabase();
+        Products::truncate();
+        RecentlyAdded::truncate();
     }
 
     /**
@@ -69,7 +69,8 @@ class TriggerTest extends TestCase
         // Make sure the model is null. This should test the trigger set on the recently_changed table
         $this->assertTrue($model == null);
 
-        $this->refreshDatabase();
+        Products::truncate();
+        RecentlyAdded::truncate();
     }
 
     /**
@@ -111,6 +112,7 @@ class TriggerTest extends TestCase
         $model = Products::find(1);
         $this->assertTrue($model == null);
 
-        $this->refreshDatabase();
+        Products::truncate();
+        RecentlyAdded::truncate();
     }
 }
