@@ -49,7 +49,7 @@ class HomeController extends Controller
             $mostViewed = $this->getMostViewed(3);
 
             $end_db = microtime(true)-$start;
-            Log::debug('MostViewed database gathering took '.$end_db.' seconds');
+            Log::debug('MostViewed database gathering took '.$end_db.' seconds to get '.count($mostViewed).' products');
             // Log::channel('daily')->debug('Home controller database gathering took '.$end_db.' seconds');
 
             // $start_api = microtime(true);
@@ -138,7 +138,9 @@ class HomeController extends Controller
                 LIMIT '.$limit.';
         ';
 
-          $models = collect(DB::select(DB::raw($sql)));
+        $models = collect(DB::select(DB::raw($sql)));
+
+        // echo $models;
 
         return $models;
       }
