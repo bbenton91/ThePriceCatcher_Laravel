@@ -16,7 +16,7 @@ class PopulateProductPricesAndRanges extends Migration
     public function up()
     {
 
-        // This will grab all min and max prices of all products and insert it into the product_price_ranges table
+        // This will grab all min and max prices of all products and insert it into the product_prices table
         $sql = 'INSERT IGNORE INTO product_prices(product_sku, highest_price, lowest_price, created_at, updated_at)
                 (SELECT product_sku, MAX(regular_price) as highest_price, MIN(sale_price) as lowest_price, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP FROM `price_histories`
                     GROUP BY product_sku);
