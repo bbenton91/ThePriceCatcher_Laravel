@@ -14,18 +14,16 @@ class AddProductPricesTrigger extends Migration
      */
     public function up()
     {
-        $sql = "
-
-            CREATE PROCEDURE update_product_price_ranges (new_product_sku INT, new_regular_price INT, new_sale_price INT)
+        $sql = "CREATE PROCEDURE update_product_price_ranges (new_product_sku INT, new_regular_price INT, new_sale_price INT)
             BEGIN
                 DECLARE lowest, highest INT DEFAULT 0;
                 DECLARE old_sku INT;
 
-                SET old_sku := (SELECT product_sku from product_price_ranges where product_sku = new_product_sku);
+                SET old_sku := (SELECT product_sku from product_prices where product_sku = new_product_sku);
 
                 IF (old_sku IS NULL) THEN
 
-                    INSERT INTO product_price_ranges(product_sku, lowest_price, highest_price, created_at, updated_at)
+                    INSERT INTO product_prices(product_sku, lowest_price, highest_price, created_at, updated_at)
                     VALUES (new_product_sku, new_sale_price, new_regular_price, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
                 ELSE
@@ -34,36 +32,36 @@ class AddProductPricesTrigger extends Migration
                         lowest_price
                     INTO lowest
                     FROM
-                        product_price_ranges
+                        product_prices
                     WHERE
-                        product_price_ranges.product_sku = new_product_sku ;
+                        product_prices.product_sku = new_product_sku ;
 
 
                     SELECT
                         highest_price
                     INTO highest
                     FROM
-                        product_price_ranges
+                        product_prices
                     WHERE
-                        product_price_ranges.product_sku = new_product_sku ;
+                        product_prices.product_sku = new_product_sku ;
 
                     IF new_sale_price < lowest && new_regular_price > highest THEN
 
-                        UPDATE product_price_ranges
-                        SET product_price_ranges.lowest_price = new_sale_price, product_price_ranges.highest_price = new_regular_price, updated_at = CURRENT_TIMESTAMP
-                        where product_price_ranges.product_sku = new_product_sku;
+                        UPDATE product_prices
+                        SET product_prices.lowest_price = new_sale_price, product_prices.highest_price = new_regular_price, updated_at = CURRENT_TIMESTAMP
+                        where product_prices.product_sku = new_product_sku;
 
                     ELSEIF new_sale_price < lowest THEN
 
-                        UPDATE product_price_ranges
-                        SET product_price_ranges.lowest_price = new_sale_price, updated_at = CURRENT_TIMESTAMP
-                        where product_price_ranges.product_sku = new_product_sku;
+                        UPDATE product_prices
+                        SET product_prices.lowest_price = new_sale_price, updated_at = CURRENT_TIMESTAMP
+                        where product_prices.product_sku = new_product_sku;
 
                     ELSEIF new_regular_price > highest THEN
 
-                        UPDATE product_price_ranges
-                        SET product_price_ranges.highest_price = new_regular_price, updated_at = CURRENT_TIMESTAMP
-                        where product_price_ranges.product_sku = new_product_sku;
+                        UPDATE product_prices
+                        SET product_prices.highest_price = new_regular_price, updated_at = CURRENT_TIMESTAMP
+                        where product_prices.product_sku = new_product_sku;
 
                     END IF ;
 
