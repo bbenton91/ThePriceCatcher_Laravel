@@ -8,9 +8,12 @@ use App\Models\RecentlyAdded;
 use App\Models\RecentlyChanged;
 use App\Models\TopSale;
 use App\Services\PriceHistoryService;
+use Error;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use paha\SimpleBestBuy\APIOptions;
 use paha\SimpleBestBuy\APIQueryBuilder;
 use paha\SimpleBestBuy\BestBuyAPI;
@@ -55,7 +58,11 @@ class BrowseController extends Controller
 
                 // Add to the price history table
                 //TODO This breaks stuff for some reason
-                // PriceHistoryService::addToPriceHistoryTable($results);
+                // try{
+                //     PriceHistoryService::addToPriceHistoryTable($results);
+                // }catch(Error | Exception $e){
+                //     Log::error($e->getMessage());
+                // }
             }
 
             return view('browse', [
