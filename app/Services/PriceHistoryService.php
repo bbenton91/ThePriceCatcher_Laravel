@@ -3,8 +3,11 @@
 namespace App\Services;
 
 use App\Models\PriceHistory;
+use App\Models\ProductPrices;
+use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use paha\SimpleBestBuy\ProductOptions;
 
 class PriceHistoryService{
@@ -78,27 +81,24 @@ class PriceHistoryService{
 
     public static function addToPriceHistoryTable(array $apiProducts):int
     {
-        $sql = 'SELECT *
-            FROM price_histories ph
-            INNER JOIN (
-                SELECT MAX(start_date) maxdate, product_sku
-                FROM price_histories
-                GROUP BY product_sku
-            ) ph2
-            on ph.product_sku = ph2.product_sku
-            and ph.start_date = ph2.maxdate;
-        ';
+
+        // echo "huh??";
+        // die();
+
+        $latestProducts = ProductPrices::all();
 
         // echo "what??";
         // die();
 
-        $latestProducts = DB::select(DB::raw($sql));
+        // $latestProducts = DB::unprepared($sql);
 
         // echo "what??2";
+        // die();
 
         $result = PriceHistoryService::CompareAPIResultsWithPriceHistory(collect($apiProducts), collect($latestProducts));
 
         // echo "what??3";
+        // die();
 
         DB::transaction (function () use ($result) {
             $result->each(function ($item) {
