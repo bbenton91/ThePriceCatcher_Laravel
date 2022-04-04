@@ -7,6 +7,7 @@ use App\Models\PriceHistory;
 use DateTime;
 use Error;
 use Exception;
+use Illuminate\Support\Facades\Log;
 use paha\SimpleBestBuy\APIOptions;
 use paha\SimpleBestBuy\APIQueryBuilder;
 use paha\SimpleBestBuy\BestBuyAPI;
@@ -36,16 +37,16 @@ class ResultController extends Controller
 
 
         }catch(Error | Exception $e){
-            // $logger->log("Failed to get information on result for sku {$sku}", ILogger::LEVEL_ERROR);
-            // $logger->log($e->getMessage());
-            // $logger->log($e->getTraceAsString());
+            Log::error("Failed to get information for sku {$sku}");
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
             header("Location: /error500");
             return;
         }
 
         if($apiData->error != ""){
-            // $logger->log($apiData->error);
-            // $logger->log("".$sku);
+            Log::error($apiData->error);
+            Log::error("".$sku);
             header("Location: /error500");
             return;
         }
