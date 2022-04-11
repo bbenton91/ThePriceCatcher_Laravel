@@ -16,8 +16,8 @@
 
         <div class="flex place-content-center mt-4">
           <form id="departmentForm" class="margin-top-20" action="department">
-              <label class="mr-4 font-semibold text-white" for="department">Department: </label>
-              <select id = "department_list" name="department" onchange="this.form.submit()">
+              <label class="mr-4 font-semibold text-white text-2xl lg:text-base" for="department">Department: </label>
+              <select id = "department_list" name="department" class="lg:w-base lg:h-8 w-64 h-12 text-xl lg:text-base" onchange="this.form.submit()">
               <option value=-1>Any</option>
 
                 @foreach ($departments as $dep)
@@ -48,8 +48,8 @@
             <section id="productListings" class="w-10/12 mx-auto h-auto">
                 <div id="recently_changed_list" class="preview_item_list flex flex-wrap place-content-around">
                     @foreach ($products as $item)
-                        <span class="mt-10">
-                            @include('singleListing', ['item' => $item, 'size' => 'w-30r'])
+                        <span class="mt-10 browse-listing">
+                            @include('singleListing', ['item' => $item, 'size' => 'w-full'])
                         </span>
                     @endforeach
                 </div>
