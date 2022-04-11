@@ -113,6 +113,7 @@ class HomeController extends Controller
                 ON mv.product_sku = pp.product_sku
                 JOIN products as p
                 ON mv.product_sku = p.product_sku
+                ORDER BY mv.counter ASC
                 LIMIT '.$limit.';
         ';
 
