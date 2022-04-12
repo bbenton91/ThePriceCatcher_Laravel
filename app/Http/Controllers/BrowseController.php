@@ -76,10 +76,14 @@ class BrowseController extends Controller
     }
 
     public function showTopSales($depID){
+        // This makes 'any' department selection (-1) work. So when we are less than zero, we compare to anything equal or above.
+        // Otherwise the query is matched on the depID
+        $comp = $depID > 0 ? '=' : '>=';
 
         $recents = TopSale::limit(100)
                     ->join('product_prices', 'top_sales.product_sku', '=', 'product_prices.product_sku')
                     ->join('products', 'top_sales.product_sku', '=', 'products.product_sku')
+                    ->where('products.department_id', $comp, $depID)
                     ->get();
 
         return view('browse', [
@@ -91,10 +95,14 @@ class BrowseController extends Controller
     }
 
     public function showRecentlyChanged($depID){
+        // This makes 'any' department selection (-1) work. So when we are less than zero, we compare to anything equal or above.
+        // Otherwise the query is matched on the depID
+        $comp = $depID > 0 ? '=' : '>=';
 
         $recents = RecentlyChanged::limit(100)
                     ->join('product_prices', 'recently_changed.product_sku', '=', 'product_prices.product_sku')
                     ->join('products', 'recently_changed.product_sku', '=', 'products.product_sku')
+                    ->where('products.department_id', $comp, $depID)
                     ->get();
 
         return view('browse', [
@@ -106,10 +114,14 @@ class BrowseController extends Controller
     }
 
     public function showRecentlyAdded($depID){
+        // This makes 'any' department selection (-1) work. So when we are less than zero, we compare to anything equal or above.
+        // Otherwise the query is matched on the depID
+        $comp = $depID > 0 ? '=' : '>=';
 
         $recents = RecentlyAdded::limit(100)
                     ->join('product_prices', 'recently_added.product_sku', '=', 'product_prices.product_sku')
                     ->join('products', 'recently_added.product_sku', '=', 'products.product_sku')
+                    ->where('products.department_id', $comp, $depID)
                     ->get();
 
 
