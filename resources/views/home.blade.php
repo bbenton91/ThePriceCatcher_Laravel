@@ -19,8 +19,8 @@
     <div id="main_page_div" class="w-full lg:w-10/12 m-auto mt-4">
 
 
-      <section id="introduction_section" class = "info_section ">
-        <h2 id="siteName" class="font-bold text-8xl lg:text-5xl text-center text-zinc-700">Price Catcher</h2>
+      <section id="introduction_section" class = "info_section mt-8 lg:mt-0">
+        <h2 id="siteName" class="font-bold text-8xl lg:text-5xl text-center text-zinc-700 ">Price Catcher</h2>
         <h3 class="italic pt-2 pb-2 text-center text-3xl lg:text-lg text-gray-600 font-heavy border-t border-b mt-3">A website dedicated to tracking BestBuy prices.</h3>
       </section>
 
@@ -28,7 +28,7 @@
           {{$productsTracked}} total products being tracked.
       </section> --}}
 
-      <section class = "text-2xl lg:text-xl mt-5 w-10/12 mx-auto">
+      <section class = "text-2xl lg:text-xl :mt-5 w-10/12 mx-auto">
         <p>Welcome to a price tracking website for <a href="https://www.bestbuy.com/">BestBuy.com</a>. The price tracking began on Febuary 6th 2020 and
             has been tracking all prices since.</p>
         <h2 class ="text-2xl font-semibold mt-4 text-slate-800">Good for tracking. Bad for flash sales.</h2>
@@ -46,7 +46,7 @@
             <h2 class = "text-5xl lg:text-4xl mt-10 ml-4 mb-2">Recently Added Items</h2>
             <div id="recently_changed_list" class="preview_item_list flex flex-col lg:flex-row mx-auto place-items-center">
                 @foreach ($recentlyAdded as $item)
-                    <span class="ml-4 w-9/12 lg:w-1/3 mt-6 lg:mt-0">
+                    <span class="ml-4 w-11/12 lg:w-1/3 mt-10 lg:mt-0">
                         @include('singleListing', ['item' => $item, 'size' => 'w-full'])
                     </span>
                 @endforeach
@@ -60,7 +60,7 @@
             <h2 class = "text-5xl lg:text-4xl mt-10 ml-4 mb-2">Most Viewed Items</h2>
             <div id="mostViewedList" class="preview_item_list flex flex-col lg:flex-row mx-auto place-items-center">
                 @foreach ($mostViewed as $item)
-                    <span class="ml-4 w-9/12 lg:w-1/3 mt-6 lg:mt-0">
+                    <span class="ml-4 w-11/12 lg:w-1/3 mt-10 lg:mt-0">
                         @include('singleListing', ['item' => $item, 'size' => 'w-full'])
                     </span>
                 @endforeach
@@ -74,7 +74,7 @@
             <h2 class = "text-5xl lg:text-4xl mt-10 ml-4 mb-2">Recently Changed Items</h2>
             <div id="recentlyAddedList" class="preview_item_list flex flex-col lg:flex-row mx-auto place-items-center">
                 @foreach ($recentlyChanged as $item)
-                    <span class="ml-4 w-9/12 lg:w-1/3 mt-6 lg:mt-0">
+                    <span class="ml-4 w-11/12 lg:w-1/3 mt-10 lg:mt-0">
                         @include('singleListing', ['item' => $item, 'size' => 'w-full'])
                     </span>
                 @endforeach

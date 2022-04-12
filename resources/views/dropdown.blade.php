@@ -9,7 +9,7 @@
 
 </script> --}}
 
-<div id="dropdownDiv" class="w-full flex justify-end mr-4 z-10 relative">
+<div id="dropdownDiv" class="w-full flex justify-end mt-4 mr-4 z-10 relative">
     <div class="dropdown h-full relative">
 
         <img src="https://img.icons8.com/ios/50/000000/menu.png" class="h-20 w-20"/>

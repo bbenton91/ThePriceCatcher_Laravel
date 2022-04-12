@@ -15,10 +15,10 @@
         @include('search_bar', ['prepend' => $prepend, "search_query" => ""])
 
         <div class="flex place-content-center mt-4">
-          <form id="departmentForm" class="margin-top-20" action="department">
-              <label class="mr-4 font-semibold text-white text-2xl lg:text-base" for="department">Department: </label>
-              <select id = "department_list" name="department" class="lg:w-base lg:h-8 w-64 h-12 text-xl lg:text-base" onchange="this.form.submit()">
-              <option value=-1>Any</option>
+          <form id="departmentForm" class="mt-2" action="dep">
+              <label class="mr-4 font-semibold text-black text-3xl lg:text-base" for="department">Department: </label>
+              <select id = "department_list" name="department" class="lg:w-base lg:h-8 w-64 h-14 text-xl lg:text-base border-4" onchange="this.form.submit()">
+              <option value=-1 class="lg:text-base">Any</option>
 
                 @foreach ($departments as $dep)
                     @php
@@ -45,7 +45,7 @@
         </div>
 
         @if (count($products) > 0)
-            <section id="productListings" class="w-10/12 mx-auto h-auto">
+            <section id="productListings" class="w-11/12 lg:w-10/12 mx-auto h-auto">
                 <div id="recently_changed_list" class="preview_item_list flex flex-wrap place-content-around">
                     @foreach ($products as $item)
                         <span class="mt-10 browse-listing">
