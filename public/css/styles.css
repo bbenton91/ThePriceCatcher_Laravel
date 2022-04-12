@@ -169,12 +169,14 @@
       font-style: italic;
     }
 
+    #dropdownDiv{
+        z-index: 20;
+    }
+
     .dropdown {
         position: relative;
         display: inline-block;
-        place-self: end;
-        place-items: end;
-        place-content: end;
+        z-index: 20;
     }
 
     .dropdown-content {
@@ -183,9 +185,17 @@
         background-color: #f9f9f9;
         min-width: 160px;
         box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-        padding: 12px 16px;
+        padding: 20px 20px;
         z-index: 20;
-        right: 50%;
+        right: 0;
+    }
+
+    .dropdown-content a{
+        font-size: 3rem;
+    }
+
+    .dropdown-item {
+        margin-top: 4rem;
     }
 
     .dropdown:hover .dropdown-content {
@@ -196,6 +206,7 @@
         /* visibility: hidden; */
         display: none;
     }
+
   }
 
   /* Desktop */
@@ -241,7 +252,7 @@
     }
 
     .searchbar{
-        z-index: 10;
+        z-index: -1;
     }
 }
 

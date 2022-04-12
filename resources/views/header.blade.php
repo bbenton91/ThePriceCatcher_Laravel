@@ -6,7 +6,7 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700,700i,800&display=swap" rel="stylesheet">
   </head>
-    <div id="header" class="flex border-2 drop-shadow lg:h-20 h-36 items-stretch bg-white">
+    <div id="header" class="flex border-2 drop-shadow lg:h-20 h-36 items-stretch bg-white z-50 relative">
         <div id="title" class="pl-4 mb-2 flex">
             <a href={{$prepend."/"}} class="flex">
                 <img src={{$prepend."/img/graph.png"}} alt="" class="w-24 h-24 lg:w-14 lg:h-14 self-center mr-2">

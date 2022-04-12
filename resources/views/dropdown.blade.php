@@ -1,4 +1,4 @@
-<script>
+{{-- <script>
     window.onload = () => {
         var dropdown = document.querySelector('.dropdown');
         dropdown.addEventListener('click', (evt) => {
@@ -7,32 +7,28 @@
         })
     };
 
-</script>
+</script> --}}
 
-<div id="dropdownDiv" class="w-full flex justify-end mr-4">
-    <div class="dropdown h-full flex">
+<div id="dropdownDiv" class="w-full flex justify-end mr-4 z-10 relative">
+    <div class="dropdown h-full relative">
 
-        <div class="dropdown-trigger self-center">
-            <span><img src="https://img.icons8.com/ios/50/000000/menu.png" class="h-20 w-20"/></span>
-        </div>
-
-        <div class="dropdown-menu" id="dropdown-menu" role="menu">
+        <img src="https://img.icons8.com/ios/50/000000/menu.png" class="h-20 w-20"/>
 
         <div class="dropdown-content">
 
-            <a href={{$prepend."/"}} class="dropdown-item text-4xl">
+            <a href={{$prepend."/"}} class="dropdown-item">
                 Home
             </a>
 
             <hr class="dropdown-divider">
 
-            <a href={{$prepend."/browse"}} class="dropdown-item text-4xl">
+            <a href={{$prepend."/browse"}} class="dropdown-item">
                 Browse
             </a>
 
             <hr class="dropdown-divider">
 
-            <a href="#" class="dropdown-item text-4xl">
+            <a href="#" class="dropdown-item">
                 About
             </a>
 

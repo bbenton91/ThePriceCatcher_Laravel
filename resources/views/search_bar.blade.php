@@ -1,7 +1,7 @@
-<div id="search_bar_div" class="m-auto flex flex-col items-center">
+<div id="searchBarDiv" class="m-auto flex flex-col items-center z-0 relative">
 
-    <form id="search_form" action={{"/search" }} class="w-10/12 lg:w-4/12 relative searchbar" method="get">
-        <input id="search_bar" type="text" name="query" value="{{ $search ?? "" }}" placeholder=" Search for items here" class="border-2 w-full h-16 lg:h-12 drop-shadow rounded text-2xl lg:text-lg px-2">
+    <form id="search_form" action={{"/search" }} class="w-10/12 lg:w-4/12 relative searchbar z-0" method="get">
+        <input id="search_bar" type="text" name="query" value="{{ $search ?? "" }}" placeholder=" Search for items here" class="relative border-2 w-full h-16 lg:h-12 drop-shadow rounded text-2xl lg:text-lg px-2 z-0">
         {{-- <button id="search_button" type="submit"><img src={{$prepend."/img/search-white-48dp.svg"}}></button> --}}
     </form>
 

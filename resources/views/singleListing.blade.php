@@ -49,7 +49,7 @@
 
     <div class="flex flex-col mx-2 h-full">
         {{-- <a href={{$item->product_url}}> --}}
-            <span class="text-center w-full grow font-semibold ">{{$name}}</span>
+            <span class="text-center w-full grow font-semibold lg:text-inherit">{{$name}}</span>
         {{-- </a> --}}
     </div>
 
