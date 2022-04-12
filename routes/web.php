@@ -33,11 +33,26 @@ Route::get('/search', function(Request $request) {
     return redirect()->route('search', ['searchQuery' => $searchQuery]);
 });
 
+Route::get('/browse/topSales/dep', function(Request $request) {
+    $dep = $request->input('department');
+    return redirect()->route('topSales', ['depID' => $dep]);
+});
+
+Route::get('/browse/recentlyChanged/dep', function(Request $request) {
+    $dep = $request->input('department');
+    return redirect()->route('recentlyChanged', ['depID' => $dep]);
+});
+
+Route::get('/browse/recentlyAdded/dep', function(Request $request) {
+    $dep = $request->input('department');
+    return redirect()->route('recentlyAdded', ['depID' => $dep]);
+});
+
 Route::get('/result/{id}', [ResultController::class, 'show']);
 
 Route::controller(BrowseController::class)->group(function(){
-    Route::get('/browse/topSales/{depID}', 'showTopSales');
-    Route::get('/browse/recentlyChanged/{depID}', 'showRecentlyChanged');
-    Route::get('/browse/recentlyAdded/{depID}', 'showRecentlyAdded');
+    Route::get('/browse/topSales/{depID}', 'showTopSales')->name('topSales');
+    Route::get('/browse/recentlyChanged/{depID}', 'showRecentlyChanged')->name('recentlyChanged');
+    Route::get('/browse/recentlyAdded/{depID}', 'showRecentlyAdded')->name('recentlyAdded');
     Route::get('/search/{searchQuery}', 'showSearch')->name('search');
 });
