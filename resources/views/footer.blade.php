@@ -1,7 +1,8 @@
-<footer id="footer" class="drop-shadow-sm border-2 mt-4">
+<footer id="footer" class="drop-shadow-sm border-2 mt-4 flex justify-end h-full">
     <script>
         function openForm() {
             document.getElementById("emailFormContainer").classList.remove("hide-feedback-form");
+            document.getElementById("emailFormContainer").classList.remove("hidden");
             document.getElementById("emailFormContainer").classList.add("show-feedback-form");
         }
 
@@ -92,43 +93,43 @@
         }
     </script>
 
-    <button id="sendFeedbackButton" onclick="openForm()">Send Feedback</button>
+    <button id="sendFeedbackButton" class="mr-2" onclick="openForm()">Send Feedback</button>
+</footer>
 
-    <div class="form-popup hide-feedback-form" id="emailFormContainer">
-        <div class="form-container" id="emailForm">
-            <div id="feedbackInnerContainer">
-                <h1>Send Feedback</h1>
-                <label for="email" class="email-input feedback-label"><b>Your Email</b></label><br>
-                <input type="text" name="email" placeholder="Enter Email" id="feedbackEmail" required><br>
-                <p id="emailErrorPlaceholder" class = "error-text small-text hidden">
-                    Please provide a valid email address.
+<div class="form-popup hide-feedback-form hidden" id="emailFormContainer">
+    <div class="form-container" id="emailForm">
+        <div id="feedbackInnerContainer">
+            <h1>Send Feedback</h1>
+            <label for="email" class="email-input feedback-label"><b>Your Email</b></label><br>
+            <input type="email" name="email" placeholder="Enter Email" id="feedbackEmail" required class="border-2"><br>
+            <p id="emailErrorPlaceholder" class = "error-text small-text hidden">
+                Please provide a valid email address.
+            </p>
+            <br>
+
+            <label for="subject" class="subject-input feedback-label"><b>Subject</b></label><br>
+            <input type="text" name="subject" placeholder="Enter Subject" id="feedbackSubject" required class="border"><br>
+            <p id="subjectErrorPlaceholder" class = "error-text  small-text hidden">
+                Please provide a subject.
+            </p><br>
+
+            <div id="feedbackMessageContainer">
+                <label for="content" class="content-input feedback-label"><b>Message</b></label><br>
+                <textarea name="content" placeholder="Enter Message" id="feedbackMessage" cols="30" rows="10" required class="border-2"></textarea><br>
+                <p id="contentErrorPlaceholder" class = "error-text  small-text hidden">
+                    Please enter a message to send.
                 </p>
-                <br>
+            </div>
 
-                <label for="subject" class="subject-input feedback-label"><b>Subject</b></label><br>
-                <input type="text" name="subject" placeholder="Enter Subject" id="feedbackSubject" required><br>
-                <p id="subjectErrorPlaceholder" class = "error-text  small-text hidden">
-                    Please provide a subject.
-                </p><br>
+            <br>
+            <br>
 
-                <div id="feedbackMessageContainer">
-                    <label for="content" class="content-input feedback-label"><b>Message</b></label><br>
-                    <textarea name="content" placeholder="Enter Message" id="feedbackMessage" cols="30" rows="10" required></textarea><br>
-                    <p id="contentErrorPlaceholder" class = "error-text  small-text hidden">
-                        Please enter a message to send.
-                    </p>
-                </div>
-
-                <br>
-                <br>
-
-                <div id="feedbackButtons">
-                    <button type="button" class="button accept" onclick="validateInput(document.getElementById('emailFormContainer'))">Send</button><br>
-                    <button type="button" class="button cancel" onclick="closeForm()">Close</button>
-                </div>
-
+            <div id="feedbackButtons">
+                <button type="button" class="button accept" onclick="validateInput(document.getElementById('emailFormContainer'))">Send</button><br>
+                <button type="button" class="button cancel" onclick="closeForm()">Close</button>
             </div>
 
         </div>
+
     </div>
-</footer>
+</div>

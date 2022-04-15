@@ -56,9 +56,7 @@
             </section>
         @endif
 
-        <div class="mt-4">
-            @include('footer', ['prepend' => $prepend])
-        </div>
+        @include('footer', ['prepend' => $prepend])
 
     </div>
 
