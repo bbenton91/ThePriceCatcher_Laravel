@@ -5,6 +5,8 @@
     <title>BestBuy Price Tracking</title>
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700,700i,800&display=swap" rel="stylesheet">
     <link href="{{ asset('css/styles.css') }}" rel="stylesheet">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7853339352311833"
+     crossorigin="anonymous"></script>
   </head>
   <body>
     <div id="innerBody" class="browse-color">
