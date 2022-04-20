@@ -11,7 +11,7 @@
             document.getElementById("emailFormContainer").classList.remove("show-feedback-form");
         }
 
-        function validateInput(container){
+        function validateInput(container, token){
             const form = container.childNodes[1]; // Not sure why it has to be [1] but [0] returns empty text?
 
             let email = form.querySelectorAll("input[name=email]")[0];
@@ -41,6 +41,7 @@
             // doesn't catch it
             request.onload = () => {
                 const resp = request.responseText
+                console.log(resp);
                 if(resp.length != 0){ // Don't apply errors if we have no response data
                     const errors = JSON.parse(request.responseText);
                     applyErrors(errors, form)
@@ -48,7 +49,13 @@
                 closeForm();
             }
 
-            request.open('POST', '../php/email.php', true);
+            // request.open('POST', '../php/email.php', true);
+            // request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+            // request.send(data);
+
+            console.log(token);
+            request.open('POST', '/send_feedback', true);
+            request.setRequestHeader('X-CSRF-TOKEN', token)
             request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
             request.send(data);
         }
@@ -113,7 +120,7 @@
                 Please provide a subject.
             </p><br>
 
-            <div id="feedbackMessageContainer">
+            <div id="feedbackMessageContainer" class="w-10/12">
                 <label for="content" class="content-input feedback-label"><b>Message</b></label><br>
                 <textarea name="content" placeholder="Enter Message" id="feedbackMessage" cols="30" rows="10" required class="border-2"></textarea><br>
                 <p id="contentErrorPlaceholder" class = "error-text  small-text hidden">
@@ -124,9 +131,9 @@
             <br>
             <br>
 
-            <div id="feedbackButtons">
-                <button type="button" class="button accept" onclick="validateInput(document.getElementById('emailFormContainer'))">Send</button><br>
-                <button type="button" class="button cancel" onclick="closeForm()">Close</button>
+            <div id="feedbackButtons" class="flex justify-around">
+                <button type="button" class="button bg-green-400 font-bold w-4/12" onclick="validateInput(document.getElementById('emailFormContainer'), '{{csrf_token()}}')">Send</button><br>
+                <button type="button" class="button bg-red-400 font-bold w-4/12" onclick="closeForm()">Close</button>
             </div>
 
         </div>

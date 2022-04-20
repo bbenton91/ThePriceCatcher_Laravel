@@ -504,11 +504,11 @@ Ensure the default browser behavior of the `hidden` attribute.
 .mt-10 {
   margin-top: 2.5rem;
 }
-.mb-2 {
-  margin-bottom: 0.5rem;
-}
 .mr-2 {
   margin-right: 0.5rem;
+}
+.mb-2 {
+  margin-bottom: 0.5rem;
 }
 .ml-8 {
   margin-left: 2rem;
@@ -627,6 +627,18 @@ Ensure the default browser behavior of the `hidden` attribute.
 .w-8 {
   width: 2rem;
 }
+.w-40 {
+  width: 10rem;
+}
+.w-5\/12 {
+  width: 41.666667%;
+}
+.w-4\/12 {
+  width: 33.333333%;
+}
+.w-1 {
+  width: 0.25rem;
+}
 .max-w-6xl {
   max-width: 72rem;
 }
@@ -657,6 +669,12 @@ Ensure the default browser behavior of the `hidden` attribute.
 .place-items-center {
   place-items: center;
 }
+.content-between {
+  align-content: space-between;
+}
+.content-around {
+  align-content: space-around;
+}
 .items-end {
   align-items: flex-end;
 }
@@ -672,14 +690,17 @@ Ensure the default browser behavior of the `hidden` attribute.
 .justify-center {
   justify-content: center;
 }
+.justify-between {
+  justify-content: space-between;
+}
+.justify-around {
+  justify-content: space-around;
+}
 .self-center {
   align-self: center;
 }
 .self-stretch {
   align-self: stretch;
-}
-.justify-self-end {
-  justify-self: end;
 }
 .justify-self-center {
   justify-self: center;
@@ -763,6 +784,18 @@ Ensure the default browser behavior of the `hidden` attribute.
 .bg-gray-100 {
   --tw-bg-opacity: 1;
   background-color: rgb(243 244 246 / var(--tw-bg-opacity));
+}
+.bg-green-600 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(22 163 74 / var(--tw-bg-opacity));
+}
+.bg-red-700 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(185 28 28 / var(--tw-bg-opacity));
+}
+.bg-red-400 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(248 113 113 / var(--tw-bg-opacity));
 }
 .p-2 {
   padding: 0.5rem;
@@ -1081,10 +1114,6 @@ Ensure the default browser behavior of the `hidden` attribute.
     height: 2rem;
   }
 
-  .lg\:h-4 {
-    height: 1rem;
-  }
-
   .lg\:h-20 {
     height: 5rem;
   }
@@ -1103,18 +1132,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 
   .lg\:h-48 {
     height: 12rem;
-  }
-
-  .lg\:h-6 {
-    height: 1.5rem;
-  }
-
-  .lg\:h-1 {
-    height: 0.25rem;
-  }
-
-  .lg\:h-16 {
-    height: 4rem;
   }
 
   .lg\:w-10\/12 {
