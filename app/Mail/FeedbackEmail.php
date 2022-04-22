@@ -33,7 +33,6 @@ class FeedbackEmail extends Mailable
     {
         $address = $this->data['address'];
         $subject = $this->data['subject'];
-        $from = $this->data['from'];
         $message = $this->data['message'];
         Log::debug($message);
         // $name = 'Jane Doe';
@@ -46,6 +45,6 @@ class FeedbackEmail extends Mailable
                     // ->bcc($address, $name)
                     ->replyTo($address)
                     ->subject($subject)
-                    ->with([ 'body' => $message, 'email' => $from ]);
+                    ->with([ 'body' => $message, 'email' => $address ]);
     }
 }

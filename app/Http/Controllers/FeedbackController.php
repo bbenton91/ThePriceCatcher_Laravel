@@ -40,8 +40,8 @@ class FeedbackController extends Controller
             //send email
             try{
                 $data = [
-                    'from' => 'admin@thepricecatcher.com',
-                    'address' => 'admin@thepricecatcher.com',
+                    'from' => 'admin@thepricecatcher.com', // We are sending it from ourselves
+                    'address' => $email, // This is the address they listed
                     'message' => $message,
                     'subject' => $subject
                 ];
