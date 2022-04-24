@@ -54,19 +54,13 @@ class BrowseController extends Controller
                 );
 
                 // Combine the api and models together
-                $results = $this->combineData($orderedModels, $results);
+                $combined = $this->combineData($orderedModels, $results);
 
-                // Add to the price history table
-                //TODO This breaks stuff for some reason
-                // try{
-                //     PriceHistoryService::addToPriceHistoryTable($results);
-                // }catch(Error | Exception $e){
-                //     Log::error($e->getMessage());
-                // }
+                PriceHistoryService::addToPriceHistoryTable($results);
             }
 
             return view('browse', [
-                'products' => $results,
+                'products' => $combined,
                 'departments' => $this->getDepartments(),
                 'selected' => -1,
                 'search' => $searchQuery,
@@ -165,6 +159,7 @@ class BrowseController extends Controller
                 $dbp = $orderedModels[$p->sku]; // Get the product from the orderProducts using the $p->sku from the API call
 
             $newProduct = (object)[
+                'sku' => $p->sku,
                 'product_sku'=> $p->sku,
                 'product_name' => $p->name,
                 'regular_price' => $p->regularPrice*100,

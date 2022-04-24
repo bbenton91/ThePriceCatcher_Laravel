@@ -81,25 +81,19 @@ class PriceHistoryService{
 
     public static function addToPriceHistoryTable(array $apiProducts):int
     {
+        // Gather all skus for a query
+        $skus = [];
+        foreach($apiProducts as $p){
+            $skus[] = $p->sku;
+        }
 
-        // echo "huh??";
-        // die();
+        // Use the skus here to get a subset of data
+        $latestProducts = DB::table("product_prices")->whereIn('product_sku', $skus)->get();
 
-        $latestProducts = ProductPrices::all();
-
-        // echo "what??";
-        // die();
-
-        // $latestProducts = DB::unprepared($sql);
-
-        // echo "what??2";
-        // die();
-
+        // Gather a list of products that have changed
         $result = PriceHistoryService::CompareAPIResultsWithPriceHistory(collect($apiProducts), collect($latestProducts));
 
-        // echo "what??3";
-        // die();
-
+        // Save all changed products to the database
         DB::transaction (function () use ($result) {
             $result->each(function ($item) {
                 $item->save();
