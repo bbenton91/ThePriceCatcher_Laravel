@@ -30,10 +30,10 @@
           {{$productsTracked}} total products being tracked.
       </section> --}}
 
-      <section class = "text-2xl lg:text-xl :mt-5 w-10/12 mx-auto">
+      <section class = "text-3xl lg:text-xl mt-5 lg:mt-5 w-10/12 mx-auto">
         <p>Welcome to a price tracking website for <a href="https://www.bestbuy.com/">BestBuy.com</a>. The price tracking began on Febuary 6th 2020 and
             has been tracking all prices since.</p>
-        <h2 class ="text-2xl font-semibold mt-4 text-slate-800">Good for tracking. Bad for flash sales.</h2>
+        <h2 class ="text-4xl font-semibold mt-10 lg:mt-4 text-slate-800">Good for tracking. Bad for flash sales.</h2>
         <p class="mt-2"> The price tracking on this site doesn't immediately catch sale prices. It actually
           scans a number of times a day to find product that have recently changed thanks to BestBuy's
           detailed API. Therefore, flash sales might not be recorded and regular sales might have a delay
