@@ -32,6 +32,8 @@ class EmailSubscribeController extends Controller
             DB::table('emails')->insertOrIgnore(
                 [
                     'email'=>$email,
+                    'created_at'=>now()->toDateTimeString(),
+                    'updated_at'=>now()->toDateTimeString()
                 ]
             );
 
@@ -41,7 +43,9 @@ class EmailSubscribeController extends Controller
             // Then we enter the sku and email id into the sku_emails table
             DB::table('sku_emails')->insertOrIgnore([
                 'product_sku'=>$sku,
-                'email_id'=>$email->id
+                'email_id'=>$email->id,
+                'created_at'=>now()->toDateTimeString(),
+                'updated_at'=>now()->toDateTimeString()
             ]);
 
             return response()->json(['result' => 'success']);
