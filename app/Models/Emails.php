@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Emails extends Model
 {
     use HasFactory;
+
+    public function skus(){
+        return $this->hasMany(SkuEmail::class, 'email_id');
+    }
 }
