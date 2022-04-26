@@ -10,7 +10,9 @@ require __DIR__."/../../vendor/autoload.php";
 
 use App\Models\Products;
 use App\Models\RecentlyChanged;
+use App\Models\SkuEmail;
 use App\Scripts\GatherRecentlyAddedProducts as ScriptsGatherRecentlyAddedProducts;
+use App\Services\EmailService;
 use App\Services\PriceHistoryService;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Http\Request as HttpRequest;
@@ -21,7 +23,7 @@ use paha\SimpleBestBuy\APIQueryBuilder;
 use paha\SimpleBestBuy\BestBuyAPI;
 use paha\SimpleBestBuy\ProductOptions;
 
-class GatherRecentlyAddedProducts{
+class GatherRecentlyChangedProducts{
 
     public function gather(){
         echo "starting product gather \n";
@@ -48,6 +50,98 @@ class GatherRecentlyAddedProducts{
         $count = PriceHistoryService::addToPriceHistoryTable($data->products);
 
         echo "added ".$count." to price_histories table \n";
+
+        $emails = $this->gatherEmails($this->getProductsDroppedPrice($data->products));
+
+        // EmailService::sendPriceDrop($this->getProductsDroppedPrice($data->products));
+    }
+
+    /**
+     * Gets the products that have dropped in price since last record
+     *
+     * @param array $apiProducts
+     * @return Collection
+     */
+    private function getProductsDroppedPrice(array $apiProducts): Collection{
+        $arr = [];
+
+        // Gather all skus for a query
+        $skus = [];
+        foreach($apiProducts as $p){
+            $skus[] = $p->sku;
+        }
+
+        // We only want to select certain columns. Not the regular and sale price columns (even though they should match)
+        $products = DB::table('products')->select('product_sku', 'product_name', 'description', 'product_url', 'image_url', 'department_id');
+
+        // Use the skus here to get a subset of data
+        $latestProducts = DB::table("product_prices")
+            ->whereIn('product_prices.product_sku', $skus)
+            ->joinSub($products, 'products', 'product_prices.product_sku', '=', 'products.product_sku')
+            ->get();
+
+        // Map into an associative array, product_sku as key
+        $latestProducts = $latestProducts->mapWithKeys(function($item, $key){
+            return [$item->product_sku => $item];
+        })->toArray();
+
+
+        // Then we compare and check if our current sale price is below the last sale price
+        foreach ($apiProducts as $product) {
+            $model = $latestProducts[$product->sku];
+            if($product->salePrice < $model->sale_price){
+                $model->sale_price = $product->salePrice; // We assign this here to return the updated value
+                $arr[] = $model;
+            }
+        }
+
+        // Then we return it
+        return collect($arr);
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param Collection $products
+     * @return integer
+     */
+    private function gatherEmails(Collection $productModels): array{
+        $skus = array();
+
+        // Gather the list of skys here
+        foreach ($productModels as $model) {
+            $skus[] = $model->product_sku;
+        }
+
+        // We remap the collection to be referenced by product sku
+        $productModels = $productModels->mapWithKeys(function($item, $key){
+            return [$item->product_sku => $item];
+        });
+
+        //Get the SkuEmail models joined with their email (that match the skus we gathered)
+        $models = SkuEmail::whereIn('product_sku', $skus)
+            ->join('emails', 'sku_emails.email_id', '=', 'emails.id')
+            ->get();
+
+
+        // Fun part ----
+        // We need to build a map of email -> object {email_id, array of products}
+        $map = [];
+
+        // So for each email we gathered
+        foreach ($models as $emailModel) {
+            // If the email doesn't exist in the map
+            if(!isset($map[$emailModel->email]))
+                $map[$emailModel->email] = (object)['id'=>$emailModel->id, 'products'=>[]];
+
+            // error_log(print_r($emailModel));
+
+            // If the product we want exists
+            if(isset($productModels[$emailModel->product_sku]))
+                $map[$emailModel->email]->products[] = $productModels[$emailModel->product_sku]; // We append the product
+        }
+
+        return $map;
     }
 
     private function clearRecentlyChanged(): int {
