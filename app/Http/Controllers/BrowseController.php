@@ -43,6 +43,8 @@ class BrowseController extends Controller
 
             $skus = array_map(fn($o)=>$o->sku, $results);
 
+            $combined = [];
+
             // Or maybe this handles errors/empty products?
             if(count($skus) > 0){
 
