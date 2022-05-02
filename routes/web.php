@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BrowseController;
+use App\Http\Controllers\EmailController;
 use App\Http\Controllers\EmailSubscribeController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\HomeController;
@@ -22,7 +23,7 @@ use Illuminate\Support\Facades\Route;
 
 // Route::get('/email_subscribe', [EmailSubscribeController::class, 'store']);
 Route::post('/email_subscribe', [EmailSubscribeController::class, 'store'])->name('email_subscribe.post');
-Route::post('/send_feedback', [FeedbackController::class, 'send'])->name('send_feedback.post');
+Route::post('/send_feedback', [EmailController::class, 'sendFeedback'])->name('send_feedback.post');
 
 Route::get('/', [HomeController::class, 'show']);
 
