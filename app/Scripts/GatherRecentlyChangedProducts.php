@@ -26,7 +26,9 @@ use paha\SimpleBestBuy\ProductOptions;
 class GatherRecentlyChangedProducts{
 
     public function gather(){
-        echo "starting product gather \n";
+        $emailService = new EmailService();
+
+        echo "starting product gather for recently changed \n";
         // $days_ago = "10";
         $data = $this->gatherProducts(1, 5, env('SCRIPT_GATHER_RECENTLY_ADDED_DAYS', '1'));
 
@@ -51,9 +53,7 @@ class GatherRecentlyChangedProducts{
 
         echo "added ".$count." to price_histories table \n";
 
-        $emails = $this->gatherEmails($this->getProductsDroppedPrice($data->products));
-
-        // EmailService::sendPriceDrop($this->getProductsDroppedPrice($data->products));
+        // $emailService->sendPriceDrop($this->getProductsDroppedPrice($data->products));
     }
 
     /**
@@ -97,51 +97,6 @@ class GatherRecentlyChangedProducts{
 
         // Then we return it
         return collect($arr);
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @param Collection $products
-     * @return integer
-     */
-    private function gatherEmails(Collection $productModels): array{
-        $skus = array();
-
-        // Gather the list of skys here
-        foreach ($productModels as $model) {
-            $skus[] = $model->product_sku;
-        }
-
-        // We remap the collection to be referenced by product sku
-        $productModels = $productModels->mapWithKeys(function($item, $key){
-            return [$item->product_sku => $item];
-        });
-
-        //Get the SkuEmail models joined with their email (that match the skus we gathered)
-        $models = SkuEmail::whereIn('product_sku', $skus)
-            ->join('emails', 'sku_emails.email_id', '=', 'emails.id')
-            ->get();
-
-
-        // Fun part ----
-        // We need to build a map of email -> object {email_id, array of products}
-        $map = [];
-
-        // So for each email we gathered
-        foreach ($models as $emailModel) {
-            // If the email doesn't exist in the map
-            if(!isset($map[$emailModel->email]))
-                $map[$emailModel->email] = (object)['id'=>$emailModel->id, 'products'=>[]];
-
-            // error_log(print_r($emailModel));
-
-            // If the product we want exists
-            if(isset($productModels[$emailModel->product_sku]))
-                $map[$emailModel->email]->products[] = $productModels[$emailModel->product_sku]; // We append the product
-        }
-
-        return $map;
     }
 
     private function clearRecentlyChanged(): int {
@@ -268,7 +223,7 @@ if (!debug_backtrace()) {
     );
 
     // Then we start the gather
-    $gatherer = new ScriptsGatherRecentlyAddedProducts();
+    $gatherer = new GatherRecentlyChangedProducts();
     $gatherer->gather();
 }
 
