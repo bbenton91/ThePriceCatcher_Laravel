@@ -87,18 +87,24 @@ class PriceHistoryService{
             $skus[] = $p->sku;
         }
 
-        // Use the skus here to get a subset of data
-        $latestProducts = DB::table("product_prices")->whereIn('product_sku', $skus)->get();
+        $chunks = array_chunk($skus, count($skus)/5);
 
-        // Gather a list of products that have changed
-        $result = PriceHistoryService::CompareAPIResultsWithPriceHistory(collect($apiProducts), collect($latestProducts));
+        foreach ($chunks as $chunk) {
 
-        // Save all changed products to the database
-        DB::transaction (function () use ($result) {
-            $result->each(function ($item) {
-                $item->save();
+            // Use the skus here to get a subset of data
+            $latestProducts = DB::table("product_prices")->whereIn('product_sku', $chunk)->get();
+
+            // Gather a list of products that have changed
+            $result = PriceHistoryService::CompareAPIResultsWithPriceHistory(collect($apiProducts), collect($latestProducts));
+
+            // Save all changed products to the database
+            DB::transaction (function () use ($result) {
+                $result->each(function ($item) {
+                    $item->save();
+                });
             });
-        });
+
+    }
 
         return count($result);
     }
