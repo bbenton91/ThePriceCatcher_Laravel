@@ -157,18 +157,18 @@ class GatherRecentlyChangedProducts{
     }
 
     private function addToRecentlyChanged(Collection $models){
-        // DB::transaction (function () use ($models) {
+        DB::transaction (function () use ($models) {
             $models->each(function ($item) {
                 RecentlyChanged::updateOrCreate([
                     'product_sku' => $item->product_sku
                 ]);
             });
-        // });
+        });
     }
 
     private function addToProducts(Collection $models){
 
-        // DB::transaction (function () use ($models) {
+        DB::transaction (function () use ($models) {
             $models->each(function ($item) {
                 Products::updateOrCreate([
                     'product_sku' => $item->product_sku
@@ -183,7 +183,7 @@ class GatherRecentlyChangedProducts{
                     'department_id' => $item->department_id
                 ]);
             });
-        // });
+        });
     }
 
     /**
